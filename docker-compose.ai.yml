@@ -1,0 +1,226 @@
+version: "3.8"
+
+services:
+  # خدمة تبديل الوجه
+  face-swap-service:
+    image: knoux/deepfacelab:latest
+    build:
+      context: ./docker/deepfacelab
+      dockerfile: Dockerfile
+    ports:
+      - "8001:8000"
+    volumes:
+      - ./models/deepfacelab:/app/models
+      - ./temp:/app/temp
+    environment:
+      - MODEL_PATH=/app/models
+      - GPU_ENABLED=true
+      - WORKERS=2
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # خدمة فلتر الجمال
+  beauty-filter-service:
+    image: knoux/phi3-vision:latest
+    build:
+      context: ./docker/phi3-vision
+      dockerfile: Dockerfile
+    ports:
+      - "8002:8000"
+    volumes:
+      - ./models/phi3-vision:/app/models
+      - ./temp:/app/temp
+    environment:
+      - MODEL_PATH=/app/models
+      - GPU_ENABLED=true
+      - WORKERS=4
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    restart: unless-stopped
+
+  # خدمة نقل الأسلوب الفني
+  style-transfer-service:
+    image: knoux/style-gan:latest
+    build:
+      context: ./docker/style-gan
+      dockerfile: Dockerfile
+    ports:
+      - "8003:8000"
+    volumes:
+      - ./models/style-gan:/app/models
+      - ./temp:/app/temp
+    environment:
+      - MODEL_PATH=/app/models
+      - GPU_ENABLED=true
+      - WORKERS=2
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    restart: unless-stopped
+
+  # خدمة الدقة الفائقة
+  super-resolution-service:
+    image: knoux/esrgan:latest
+    build:
+      context: ./docker/esrgan
+      dockerfile: Dockerfile
+    ports:
+      - "8004:8000"
+    volumes:
+      - ./models/esrgan:/app/models
+      - ./temp:/app/temp
+    environment:
+      - MODEL_PATH=/app/models
+      - GPU_ENABLED=true
+      - WORKERS=6
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    restart: unless-stopped
+
+  # خدمة إزالة الخلفية
+  background-remover-service:
+    image: knoux/sam-bg:latest
+    build:
+      context: ./docker/sam-bg
+      dockerfile: Dockerfile
+    ports:
+      - "8005:8000"
+    volumes:
+      - ./models/sam:/app/models
+      - ./temp:/app/temp
+    environment:
+      - MODEL_PATH=/app/models
+      - GPU_ENABLED=true
+      - WORKERS=8
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    restart: unless-stopped
+
+  # خدمة VIP Magic Morph
+  vip-magic-morph-service:
+    image: knoux/mega-gan:latest
+    build:
+      context: ./docker/mega-gan
+      dockerfile: Dockerfile
+    ports:
+      - "8010:8000"
+    volumes:
+      - ./models/mega-gan:/app/models
+      - ./temp:/app/temp
+      - ./vip.key:/app/vip.key:ro
+    environment:
+      - MODEL_PATH=/app/models
+      - GPU_ENABLED=true
+      - WORKERS=1
+      - VIP_ONLY=true
+      - VIP_KEY_PATH=/app/vip.key
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 2
+              capabilities: [gpu]
+    restart: unless-stopped
+
+  # خدمة المراقبة والإحصائيات
+  monitoring-service:
+    image: prom/prometheus:latest
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./docker/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/prometheus
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--storage.tsdb.path=/prometheus"
+      - "--web.console.libraries=/etc/prometheus/console_libraries"
+      - "--web.console.templates=/etc/prometheus/consoles"
+      - "--storage.tsdb.retention.time=200h"
+      - "--web.enable-lifecycle"
+    restart: unless-stopped
+
+  # قاعدة بيانات Redis للكاش
+  redis-cache:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes --maxmemory 1gb --maxmemory-policy allkeys-lru
+    restart: unless-stopped
+
+  # Load Balancer
+  nginx-lb:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./docker/nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./docker/nginx/ssl:/etc/nginx/ssl
+    depends_on:
+      - face-swap-service
+      - beauty-filter-service
+      - style-transfer-service
+      - super-resolution-service
+      - background-remover-service
+      - vip-magic-morph-service
+    restart: unless-stopped
+
+volumes:
+  prometheus_data:
+  redis_data:
+
+networks:
+  default:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
+
+# إعدادات إضافية للتطوير
+x-gpu-template: &gpu-template
+  deploy:
+    resources:
+      reservations:
+        devices:
+          - driver: nvidia
+            count: 1
+            capabilities: [gpu]
+
+x-common-environment: &common-env
+  - PYTHONUNBUFFERED=1
+  - CUDA_VISIBLE_DEVICES=0
+  - OMP_NUM_THREADS=4
+  - WORKERS=2
