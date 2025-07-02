@@ -28,159 +28,18 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useMutation } from "@tanstack/react-query";
 
-// Mock API function for local processing (will be replaced with actual local AI)
+import { processToolRequest } from "@/lib/toolProcessors";
+
+// Local AI processing function using the custom tool processors
 const processToolLocally = async (
+  tool: AiTool,
   payload: ProcessToolRequestPayload,
+  progressCallback?: (progress: number, message: string) => void,
 ): Promise<ProcessToolResponse> => {
-  // Simulate processing time
-  await new Promise((resolve) =>
-    setTimeout(resolve, 2000 + Math.random() * 3000),
-  );
-
-  // Simulate different outcomes based on tool
-  if (Math.random() > 0.1) {
-    // 90% success rate
-    return {
-      success: true,
-      editedImage: payload.image, // Return same image for now (will be replaced with actual processing)
-      message: `${payload.tool_id} processing completed successfully`,
-    };
-  } else {
-    return {
-      success: false,
-      message: `${payload.tool_id} processing failed: Simulated error`,
-    };
-  }
+  return processToolRequest(tool, payload, progressCallback);
 };
 
-interface ToolSettingsProps {
-  tool: AiTool;
-  settings: Record<string, any>;
-  onSettingsChange: (settings: Record<string, any>) => void;
-  language: "ar" | "en";
-}
-
-const ToolSettings: React.FC<ToolSettingsProps> = ({
-  tool,
-  settings,
-  onSettingsChange,
-  language,
-}) => {
-  const updateSetting = useCallback(
-    (key: string, value: any) => {
-      onSettingsChange({ ...settings, [key]: value });
-    },
-    [settings, onSettingsChange],
-  );
-
-  // Generate UI based on tool's input schema
-  const renderSettingControl = (key: string, schema: any) => {
-    const currentValue = settings[key] ?? schema.default;
-
-    switch (schema.type) {
-      case "number":
-        if (schema.enum) {
-          return (
-            <Select
-              value={currentValue?.toString()}
-              onValueChange={(value) => updateSetting(key, parseInt(value))}
-            >
-              <SelectTrigger className="bg-white/5 border-white/10">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                {schema.enum.map((option: number) => (
-                  <SelectItem key={option} value={option.toString()}>
-                    {option}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          );
-        } else {
-          return (
-            <div className="space-y-2">
-              <Slider
-                value={[currentValue || schema.default || 0]}
-                onValueChange={([value]) => updateSetting(key, value)}
-                min={schema.minimum || 0}
-                max={schema.maximum || 1}
-                step={0.1}
-              />
-              <div className="text-xs text-gray-400 text-center">
-                {currentValue || schema.default || 0}
-              </div>
-            </div>
-          );
-        }
-
-      case "string":
-        if (schema.enum) {
-          return (
-            <Select
-              value={currentValue}
-              onValueChange={(value) => updateSetting(key, value)}
-            >
-              <SelectTrigger className="bg-white/5 border-white/10">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                {schema.enum.map((option: string) => (
-                  <SelectItem key={option} value={option}>
-                    {option}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          );
-        } else {
-          return (
-            <Input
-              value={currentValue || ""}
-              onChange={(e) => updateSetting(key, e.target.value)}
-              placeholder={schema.description}
-              className="bg-white/5 border-white/10"
-            />
-          );
-        }
-
-      case "boolean":
-        return (
-          <Button
-            onClick={() => updateSetting(key, !currentValue)}
-            variant={currentValue ? "default" : "outline"}
-            size="sm"
-            className="w-full"
-          >
-            {currentValue ? "Enabled" : "Disabled"}
-          </Button>
-        );
-
-      default:
-        return null;
-    }
-  };
-
-  if (!tool.input_schema) return null;
-
-  return (
-    <div className="space-y-4">
-      <h4 className="text-sm font-semibold text-gray-300">Tool Settings</h4>
-      {Object.entries(tool.input_schema).map(([key, schema]: [string, any]) => (
-        <div key={key} className="space-y-2">
-          <label className="text-xs font-medium text-gray-400 capitalize">
-            {key.replace(/_/g, " ")}:{" "}
-            {schema.required && <span className="text-red-400">*</span>}
-          </label>
-          {renderSettingControl(key, schema)}
-          {schema.description && (
-            <p className="text-xs text-gray-500">{schema.description}</p>
-          )}
-        </div>
-      ))}
-    </div>
-  );
-};
+import { AdvancedToolSettings } from "./AdvancedToolSettings";
 
 export const MainImageEditor: React.FC = () => {
   // State management
@@ -201,17 +60,32 @@ export const MainImageEditor: React.FC = () => {
   const { data: selectedTool } = useToolById(selectedToolId);
   const { isModelReady } = useModelDownloading();
 
-  // Processing mutation
+  // Processing mutation with progress tracking
+  const [processingProgress, setProcessingProgress] = useState(0);
+  const [processingMessage, setProcessingMessage] = useState("");
+
   const processingMutation = useMutation<
     ProcessToolResponse,
     Error,
-    ProcessToolRequestPayload
+    { tool: AiTool; payload: ProcessToolRequestPayload }
   >({
-    mutationFn: processToolLocally,
+    mutationFn: async ({ tool, payload }) => {
+      return processToolLocally(tool, payload, (progress, message) => {
+        setProcessingProgress(progress);
+        setProcessingMessage(message);
+      });
+    },
     onSuccess: (data) => {
       if (data.success && data.editedImage) {
         setEditedImage(data.editedImage);
+        setProcessingMessage("تمت المعالجة بنجاح!");
+      } else if (!data.success) {
+        console.error("Processing failed:", data.message);
       }
+    },
+    onError: (error) => {
+      console.error("Processing error:", error);
+      setProcessingMessage("فشلت المعالجة");
     },
   });
 
@@ -281,6 +155,9 @@ export const MainImageEditor: React.FC = () => {
   const handleProcess = useCallback(async () => {
     if (!canProcess || !selectedTool || !originalImage) return;
 
+    setProcessingProgress(0);
+    setProcessingMessage("تحضير المعالجة...");
+
     const payload: ProcessToolRequestPayload = {
       tool_id: selectedTool.id,
       image: originalImage,
@@ -290,7 +167,7 @@ export const MainImageEditor: React.FC = () => {
       settings: toolSettings,
     };
 
-    processingMutation.mutate(payload);
+    processingMutation.mutate({ tool: selectedTool, payload });
   }, [
     canProcess,
     selectedTool,
@@ -479,26 +356,29 @@ export const MainImageEditor: React.FC = () => {
                       </div>
                     )}
 
-                    {/* Tool Settings */}
-                    {selectedTool.input_schema && (
-                      <ToolSettings
-                        tool={selectedTool}
-                        settings={toolSettings}
-                        onSettingsChange={handleSettingsChange}
-                        language={lang}
-                      />
-                    )}
+                    {/* Advanced Tool Settings */}
+                    <AdvancedToolSettings
+                      tool={selectedTool}
+                      settings={toolSettings}
+                      onSettingsChange={handleSettingsChange}
+                    />
 
                     {/* Processing Status */}
                     {processingMutation.isLoading && (
-                      <div className="space-y-2">
+                      <div className="space-y-3">
                         <div className="flex justify-between text-sm">
-                          <span className="text-gray-400">Processing...</span>
+                          <span className="text-gray-400">
+                            {processingMessage}
+                          </span>
                           <span className="text-cyan-400">
-                            {selectedTool.model_info.processing_time_secs}
+                            {Math.round(processingProgress)}%
                           </span>
                         </div>
-                        <Progress value={undefined} className="h-2" />
+                        <Progress value={processingProgress} className="h-2" />
+                        <div className="text-xs text-gray-500 text-center">
+                          المدة المتوقعة:{" "}
+                          {selectedTool.model_info.processing_time_secs}
+                        </div>
                       </div>
                     )}
 
