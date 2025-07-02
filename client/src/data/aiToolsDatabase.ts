@@ -14,11 +14,9 @@ export const AI_TOOLS_DATABASE: AiTool[] = [
     category: "Face",
     model_info: {
       name: "DeepFaceLab-SAEHD",
-      backend_identifier: AIModelIdentifier.DEEPFACELAB_SAEHD,
+      backend_identifier: "deepfacelab_saehd",
       size_gb: 1.2,
       processing_time_secs: "5-15 ثانية",
-      gpu_required: true,
-      min_vram_gb: 4,
     },
     features: [
       {
@@ -275,7 +273,7 @@ export const AI_TOOLS_DATABASE: AiTool[] = [
         description_en: "Preserve basic features",
       },
       {
-        description_ar: "تعديل الشعر والمكياج",
+        description_ar: "تع��يل الشعر والمكياج",
         description_en: "Hair and makeup adjustment",
       },
       {
