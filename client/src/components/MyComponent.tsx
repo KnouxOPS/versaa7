@@ -1,5 +1,5 @@
-import SimpleBuilderComponent from "./SimpleBuilderComponent";
+import ResearchShowcase from "./ResearchShowcase";
 
 export default function MyComponent() {
-  return <SimpleBuilderComponent />;
+  return <ResearchShowcase />;
 }
