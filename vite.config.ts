@@ -27,6 +27,22 @@ export default defineConfig({
   build: {
     outDir: path.resolve(import.meta.dirname, "dist/public"),
     emptyOutDir: true,
+    sourcemap: false,
+    minify: "terser",
+    target: "esnext",
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor: ["react", "react-dom"],
+          ui: [
+            "@radix-ui/react-dialog",
+            "@radix-ui/react-tabs",
+            "@radix-ui/react-progress",
+          ],
+          utils: ["clsx", "class-variance-authority", "tailwind-merge"],
+        },
+      },
+    },
   },
   server: {
     fs: {
