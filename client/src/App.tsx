@@ -6,13 +6,23 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { LanguageProvider } from "@/components/LanguageProvider";
 import Home from "@/pages/Home";
 import About from "@/pages/About";
+import Builder from "@/pages/Builder";
 import NotFound from "@/pages/not-found";
+import MyComponent from "@/components/MyComponent";
+import BuilderHero from "@/components/BuilderHero";
+import SimpleBuilderComponent from "@/components/SimpleBuilderComponent";
+import ResearchShowcase from "@/components/ResearchShowcase";
 
 function Router() {
   return (
     <Switch>
       <Route path="/" component={Home} />
       <Route path="/about" component={About} />
+      <Route path="/builder" component={Builder} />
+      <Route path="/component" component={MyComponent} />
+      <Route path="/research" component={ResearchShowcase} />
+      <Route path="/simple" component={SimpleBuilderComponent} />
+      <Route path="/hero" component={BuilderHero} />
       <Route component={NotFound} />
     </Switch>
   );

@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { performance } from "perf_hooks";
+import { loadavg } from "os";
 
 // إحصائيات المراقبة
 interface PerformanceMetrics {
@@ -140,7 +141,7 @@ function updateMetrics(requestMetrics: RequestMetrics) {
 function addToHistory(requestMetrics: RequestMetrics) {
   requestHistory.push(requestMetrics);
 
-  // الحفاظ على حد أقصى من السجلات
+  // الحفاظ على حد أق��ى من السجلات
   if (requestHistory.length > MAX_HISTORY_SIZE) {
     requestHistory.shift();
   }
@@ -167,8 +168,7 @@ export function getCurrentMetrics(): PerformanceMetrics & {
       arch: process.arch,
       uptime: process.uptime(),
       cpuUsage: process.cpuUsage(),
-      loadAverage:
-        process.platform === "linux" ? require("os").loadavg() : null,
+      loadAverage: process.platform === "linux" ? loadavg() : null,
     },
   };
 }

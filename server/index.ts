@@ -14,10 +14,11 @@ import {
 
 const app = express();
 
-// Security and performance middleware
+// Security and performance middleware - allow embedding in Builder.io
 app.use(
   helmet({
     contentSecurityPolicy: false, // Disable for development
+    frameguard: false, // Allow embedding in iframes for Builder.io
   }),
 );
 app.use(compression());
@@ -26,8 +27,16 @@ app.use(
     origin:
       process.env.NODE_ENV === "development"
         ? true
-        : ["https://yourdomain.com"],
+        : [
+            "https://yourdomain.com",
+            "https://builder.io",
+            "https://*.builder.io",
+            "https://cdn.builder.io",
+            "https://*.builder.my",
+          ],
     credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
   }),
 );
 
@@ -38,11 +47,88 @@ app.use(morgan("combined"));
 app.use(express.json({ limit: "100mb" }));
 app.use(express.urlencoded({ extended: true, limit: "100mb" }));
 
+// File upload handling
+import multer from "multer";
+import path from "path";
+import fs from "fs";
+
+// Configure multer for file uploads
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    const uploadDir = path.join(process.cwd(), "uploads");
+    if (!fs.existsSync(uploadDir)) {
+      fs.mkdirSync(uploadDir, { recursive: true });
+    }
+    cb(null, uploadDir);
+  },
+  filename: (req, file, cb) => {
+    const uniqueSuffix = Date.now() + "-" + file.originalname;
+    cb(null, uniqueSuffix);
+  },
+});
+
+const upload = multer({
+  storage,
+  limits: { fileSize: 10 * 1024 * 1024 }, // 10MB limit
+  fileFilter: (req, file, cb) => {
+    if (file.mimetype.startsWith("image/")) {
+      cb(null, true);
+    } else {
+      cb(new Error("Only image files are allowed!"), false);
+    }
+  },
+});
+
+// Image upload endpoint
+app.post(
+  "/api/upload",
+  upload.single("image"),
+  (req: Request, res: Response) => {
+    try {
+      if (!req.file) {
+        return res
+          .status(400)
+          .json({ success: false, message: "No file uploaded" });
+      }
+
+      const imageUrl = `/uploads/${req.file.filename}`;
+      res.json({ success: true, imageUrl });
+    } catch (error) {
+      console.error("Upload error:", error);
+      res.status(500).json({ success: false, message: "Upload failed" });
+    }
+  },
+);
+
+// Serve uploaded files
+app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));
+
 // Trust proxy for correct IP detection
 app.set("trust proxy", 1);
 
 // Add monitoring middleware
 app.use(monitorPerformance);
+
+// Add headers for Builder.io iframe support
+app.use((req, res, next) => {
+  // Allow embedding in Builder.io iframes
+  res.setHeader("X-Frame-Options", "ALLOWALL");
+  res.setHeader("Content-Security-Policy", "frame-ancestors *;");
+
+  // Additional CORS headers for Builder.io
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader(
+    "Access-Control-Allow-Methods",
+    "GET, POST, PUT, DELETE, OPTIONS",
+  );
+  res.setHeader(
+    "Access-Control-Allow-Headers",
+    "Content-Type, Authorization, X-Requested-With",
+  );
+  res.setHeader("Access-Control-Allow-Credentials", "true");
+
+  next();
+});
 
 app.use((req, res, next) => {
   const start = Date.now();

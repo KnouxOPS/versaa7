@@ -15,15 +15,23 @@ interface SelectionPoint {
   y: number;
 }
 
-export function ImageCanvas({ onImageUpload, onSelectionChange, uploadedImage }: ImageCanvasProps) {
+export function ImageCanvas({
+  onImageUpload,
+  onSelectionChange,
+  uploadedImage,
+}: ImageCanvasProps) {
   const { t } = useLanguage();
   const [isSelecting, setIsSelecting] = useState(false);
-  const [selectionTool, setSelectionTool] = useState<"brush" | "rectangle">("brush");
+  const [selectionTool, setSelectionTool] = useState<"brush" | "rectangle">(
+    "brush",
+  );
   const [selectionPath, setSelectionPath] = useState<SelectionPoint[]>([]);
-  const [rectangleStart, setRectangleStart] = useState<SelectionPoint | null>(null);
+  const [rectangleStart, setRectangleStart] = useState<SelectionPoint | null>(
+    null,
+  );
   const [rectangleEnd, setRectangleEnd] = useState<SelectionPoint | null>(null);
   const [isUploading, setIsUploading] = useState(false);
-  
+
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const imageRef = useRef<HTMLImageElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -40,19 +48,19 @@ export function ImageCanvas({ onImageUpload, onSelectionChange, uploadedImage }:
     }
 
     setIsUploading(true);
-    
+
     try {
-      const formData = new FormData();
-      formData.append("image", file);
-      
-      const response = await apiRequest("POST", "/api/upload", formData);
-      const result = await response.json();
-      
-      onImageUpload(result.imageUrl);
+      // Use FileReader to read image as data URL for local processing
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const imageUrl = e.target?.result as string;
+        onImageUpload(imageUrl);
+        setIsUploading(false);
+      };
+      reader.readAsDataURL(file);
     } catch (error) {
       console.error("Upload failed:", error);
       alert(t("Failed to upload image. Please try again."));
-    } finally {
       setIsUploading(false);
     }
   };
@@ -60,7 +68,7 @@ export function ImageCanvas({ onImageUpload, onSelectionChange, uploadedImage }:
   const handleDrop = useCallback((e: React.DragEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    
+
     const files = e.dataTransfer.files;
     if (files.length > 0) {
       handleFileSelect(files[0]);
@@ -82,9 +90,9 @@ export function ImageCanvas({ onImageUpload, onSelectionChange, uploadedImage }:
   const setupCanvas = useCallback(() => {
     const canvas = canvasRef.current;
     const image = imageRef.current;
-    
+
     if (!canvas || !image) return;
-    
+
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
@@ -94,7 +102,7 @@ export function ImageCanvas({ onImageUpload, onSelectionChange, uploadedImage }:
     canvas.height = rect.height;
     canvas.style.width = `${rect.width}px`;
     canvas.style.height = `${rect.height}px`;
-    
+
     // Clear and redraw selection
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     drawSelection(ctx);
@@ -114,10 +122,14 @@ export function ImageCanvas({ onImageUpload, onSelectionChange, uploadedImage }:
         ctx.lineTo(selectionPath[i].x, selectionPath[i].y);
       }
       ctx.stroke();
-    } else if (selectionTool === "rectangle" && rectangleStart && rectangleEnd) {
+    } else if (
+      selectionTool === "rectangle" &&
+      rectangleStart &&
+      rectangleEnd
+    ) {
       const width = rectangleEnd.x - rectangleStart.x;
       const height = rectangleEnd.y - rectangleStart.y;
-      
+
       ctx.fillStyle = "rgba(0, 255, 255, 0.1)";
       ctx.fillRect(rectangleStart.x, rectangleStart.y, width, height);
       ctx.strokeRect(rectangleStart.x, rectangleStart.y, width, height);
@@ -127,20 +139,20 @@ export function ImageCanvas({ onImageUpload, onSelectionChange, uploadedImage }:
   const getCanvasCoordinates = (e: React.MouseEvent<HTMLCanvasElement>) => {
     const canvas = canvasRef.current;
     if (!canvas) return { x: 0, y: 0 };
-    
+
     const rect = canvas.getBoundingClientRect();
     return {
       x: e.clientX - rect.left,
-      y: e.clientY - rect.top
+      y: e.clientY - rect.top,
     };
   };
 
   const handleMouseDown = (e: React.MouseEvent<HTMLCanvasElement>) => {
     if (!uploadedImage) return;
-    
+
     setIsSelecting(true);
     const coords = getCanvasCoordinates(e);
-    
+
     if (selectionTool === "brush") {
       setSelectionPath([coords]);
     } else if (selectionTool === "rectangle") {
@@ -151,39 +163,43 @@ export function ImageCanvas({ onImageUpload, onSelectionChange, uploadedImage }:
 
   const handleMouseMove = (e: React.MouseEvent<HTMLCanvasElement>) => {
     if (!isSelecting || !uploadedImage) return;
-    
+
     const coords = getCanvasCoordinates(e);
-    
+
     if (selectionTool === "brush") {
-      setSelectionPath(prev => [...prev, coords]);
+      setSelectionPath((prev) => [...prev, coords]);
     } else if (selectionTool === "rectangle") {
       setRectangleEnd(coords);
     }
-    
+
     setupCanvas();
   };
 
   const handleMouseUp = () => {
     setIsSelecting(false);
-    
+
     // Emit selection data
     let selectionData: any = {};
-    
+
     if (selectionTool === "brush" && selectionPath.length > 0) {
       selectionData = {
         type: "brush",
-        points: selectionPath
+        points: selectionPath,
       };
-    } else if (selectionTool === "rectangle" && rectangleStart && rectangleEnd) {
+    } else if (
+      selectionTool === "rectangle" &&
+      rectangleStart &&
+      rectangleEnd
+    ) {
       selectionData = {
         type: "rectangle",
         x: rectangleStart.x,
         y: rectangleStart.y,
         width: rectangleEnd.x - rectangleStart.x,
-        height: rectangleEnd.y - rectangleStart.y
+        height: rectangleEnd.y - rectangleStart.y,
       };
     }
-    
+
     onSelectionChange(JSON.stringify(selectionData));
   };
 
@@ -199,7 +215,7 @@ export function ImageCanvas({ onImageUpload, onSelectionChange, uploadedImage }:
     <div className="space-y-6">
       {/* Upload Area */}
       {!uploadedImage && (
-        <Card 
+        <Card
           className="selection-canvas rounded-2xl p-8 text-center min-h-[400px] flex flex-col justify-center items-center cursor-pointer transition-all duration-300 hover:border-cyan-400/80 hover:neon-glow"
           onDrop={handleDrop}
           onDragOver={handleDragOver}
@@ -209,7 +225,9 @@ export function ImageCanvas({ onImageUpload, onSelectionChange, uploadedImage }:
             {isUploading ? (
               <>
                 <div className="loading-spinner w-16 h-16 mx-auto mb-4"></div>
-                <p className="text-xl font-semibold mb-2">{t("Uploading...")}</p>
+                <p className="text-xl font-semibold mb-2">
+                  {t("Uploading...")}
+                </p>
               </>
             ) : (
               <>
@@ -263,21 +281,29 @@ export function ImageCanvas({ onImageUpload, onSelectionChange, uploadedImage }:
             <Button
               variant={selectionTool === "brush" ? "default" : "outline"}
               onClick={() => setSelectionTool("brush")}
-              className={selectionTool === "brush" ? "bg-cyan-400/20 border-cyan-400" : "glass border-cyan-400/30"}
+              className={
+                selectionTool === "brush"
+                  ? "bg-cyan-400/20 border-cyan-400"
+                  : "glass border-cyan-400/30"
+              }
             >
               <i className="fas fa-brush mr-2 text-cyan-400"></i>
               {t("Brush Select")}
             </Button>
-            
+
             <Button
               variant={selectionTool === "rectangle" ? "default" : "outline"}
               onClick={() => setSelectionTool("rectangle")}
-              className={selectionTool === "rectangle" ? "bg-purple-400/20 border-purple-400" : "glass border-purple-400/30"}
+              className={
+                selectionTool === "rectangle"
+                  ? "bg-purple-400/20 border-purple-400"
+                  : "glass border-purple-400/30"
+              }
             >
               <i className="fas fa-vector-square mr-2 text-purple-400"></i>
               {t("Rectangle")}
             </Button>
-            
+
             <Button
               variant="outline"
               onClick={clearSelection}
@@ -286,7 +312,7 @@ export function ImageCanvas({ onImageUpload, onSelectionChange, uploadedImage }:
               <i className="fas fa-eraser mr-2 text-red-400"></i>
               {t("Clear")}
             </Button>
-            
+
             <Button
               variant="outline"
               onClick={() => fileInputRef.current?.click()}
