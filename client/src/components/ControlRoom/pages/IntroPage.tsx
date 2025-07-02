@@ -95,7 +95,7 @@ export const IntroPage: React.FC = () => {
       </div>
 
       {/* Main Content */}
-      <div className="text-center space-y-8 relative z-10 max-w-4xl">
+      <div className="text-center space-y-8 relative z-10 max-w-6xl w-full">
         {/* Hero Logo */}
         <div className="flex justify-center mb-8">
           <div className="relative group">
