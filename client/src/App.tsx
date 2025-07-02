@@ -10,6 +10,7 @@ import Builder from "@/pages/Builder";
 import NotFound from "@/pages/not-found";
 import MyComponent from "@/components/MyComponent";
 import BuilderHero from "@/components/BuilderHero";
+import SimpleBuilderComponent from "@/components/SimpleBuilderComponent";
 
 function Router() {
   return (
@@ -18,6 +19,7 @@ function Router() {
       <Route path="/about" component={About} />
       <Route path="/builder" component={Builder} />
       <Route path="/component" component={MyComponent} />
+      <Route path="/simple" component={SimpleBuilderComponent} />
       <Route path="/hero" component={BuilderHero} />
       <Route component={NotFound} />
     </Switch>
