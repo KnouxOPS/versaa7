@@ -189,7 +189,10 @@ export const ComprehensiveModelManager: React.FC = () => {
       },
     };
 
-    const config = variants[status];
+    // Handle undefined or invalid status by defaulting to not_downloaded
+    const safeStatus = status && variants[status] ? status : "not_downloaded";
+    const config = variants[safeStatus];
+
     return (
       <Badge variant={config.variant} className={config.color}>
         {config.text}
