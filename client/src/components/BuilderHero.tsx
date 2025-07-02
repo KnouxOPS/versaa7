@@ -17,6 +17,8 @@ export default function BuilderHero({
   heroImage = "https://cdn.builder.io/api/v1/image/assets%2F097d5f110a6844f7bf48358cc02a3156%2F4089c5496d87402ab56438165795fedb?format=webp&width=800",
 }: BuilderHeroProps) {
   const [currentLanguage, setCurrentLanguage] = useState<"en" | "ar">("ar");
+  const [typingText, setTypingText] = useState("");
+  const [showSecondary, setShowSecondary] = useState(false);
 
   const toggleLanguage = () => {
     setCurrentLanguage((prev) => (prev === "en" ? "ar" : "en"));
@@ -248,7 +250,7 @@ export default function BuilderHero({
             </h3>
             <p className="text-gray-300">
               {currentLanguage === "ar"
-                ? "مجموعة شا��لة من الأدوات المتطورة لجميع احتياجاتك الإبداعية"
+                ? "مجموعة شاملة من الأدوات المتطورة لجميع احتياجاتك الإبداعية"
                 : "Complete suite of advanced tools for all your creative needs"}
             </p>
           </div>
