@@ -153,10 +153,10 @@ function createMainWindow(): BrowserWindow {
 
   // Load the app
   if (isDev) {
-    mainWindow.loadURL("http://localhost:3000");
+    mainWindow.loadURL("http://localhost:5000");
     mainWindow.webContents.openDevTools();
   } else {
-    mainWindow.loadFile(join(__dirname, "../dist/public/index.html"));
+    mainWindow.loadFile(join(__dirname, "../public/index.html"));
   }
 
   // Show window when ready
