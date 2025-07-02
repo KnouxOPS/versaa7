@@ -21,100 +21,43 @@ const isDev = process.env.NODE_ENV === "development";
 
 function createSplashWindow(): BrowserWindow {
   splashWindow = new BrowserWindow({
-    width: 400,
-    height: 300,
+    width: 450,
+    height: 350,
     frame: false,
     alwaysOnTop: true,
     transparent: true,
+    resizable: false,
     webPreferences: {
       nodeIntegration: false,
       contextIsolation: true,
     },
   });
 
-  // Splash screen HTML content
-  const splashHTML = `
-    <!DOCTYPE html>
-    <html>
-    <head>
-      <style>
-        body {
-          margin: 0;
-          padding: 0;
-          background: linear-gradient(135deg, #1a1a1a 0%, #2d3748 100%);
-          color: white;
-          font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-          align-items: center;
-          height: 100vh;
-          overflow: hidden;
-        }
-        .logo {
-          width: 80px;
-          height: 80px;
-          background: linear-gradient(135deg, #00ffff, #8b5cf6);
-          border-radius: 50%;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          font-size: 36px;
-          font-weight: bold;
-          margin-bottom: 20px;
-          animation: pulse 2s infinite;
-        }
-        .title {
-          font-size: 24px;
-          font-weight: bold;
-          background: linear-gradient(135deg, #00ffff, #8b5cf6);
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-          margin-bottom: 10px;
-        }
-        .subtitle {
-          font-size: 12px;
-          color: #888;
-          margin-bottom: 30px;
-        }
-        .loading {
-          width: 200px;
-          height: 4px;
-          background: #333;
-          border-radius: 2px;
-          overflow: hidden;
-        }
-        .loading-bar {
-          height: 100%;
-          background: linear-gradient(90deg, #00ffff, #8b5cf6);
-          width: 0%;
-          animation: loading 3s ease-in-out infinite;
-        }
-        @keyframes pulse {
-          0%, 100% { transform: scale(1); }
-          50% { transform: scale(1.1); }
-        }
-        @keyframes loading {
-          0% { width: 0%; }
-          50% { width: 70%; }
-          100% { width: 100%; }
-        }
-      </style>
-    </head>
-    <body>
-      <div class="logo">K</div>
-      <div class="title">KNOUX VERSA</div>
-      <div class="subtitle">The Uncensored AI Nexus</div>
-      <div class="loading">
-        <div class="loading-bar"></div>
-      </div>
-    </body>
-    </html>
-  `;
+  // Load external splash screen
+  const splashPath = isDev
+    ? join(__dirname, "../assets/splash.html")
+    : join(__dirname, "../assets/splash.html");
 
-  splashWindow.loadURL(
-    `data:text/html;charset=UTF-8,${encodeURIComponent(splashHTML)}`,
-  );
+  splashWindow.loadFile(splashPath).catch(() => {
+    // Fallback to simple splash if file not found
+    const simpleSplash = `data:text/html;charset=UTF-8,${encodeURIComponent(`
+      <!DOCTYPE html>
+      <html>
+        <head><style>
+          body { margin:0; padding:40px; background:#1a1a2e; color:#00ffff;
+                 font-family:system-ui; text-align:center; }
+          .logo { font-size:48px; margin-bottom:20px; }
+          .title { font-size:24px; margin-bottom:10px; }
+        </style></head>
+        <body>
+          <div class="logo">K</div>
+          <div class="title">KNOUX VERSA</div>
+          <div>Loading AI Nexus...</div>
+        </body>
+      </html>
+    `)}`;
+    splashWindow.loadURL(simpleSplash);
+  });
 
   // Center the splash window
   const { width, height } = screen.getPrimaryDisplay().workAreaSize;
