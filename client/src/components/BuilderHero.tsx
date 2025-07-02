@@ -24,6 +24,51 @@ export default function BuilderHero({
     setCurrentLanguage((prev) => (prev === "en" ? "ar" : "en"));
   };
 
+  // Typing animation effect
+  useEffect(() => {
+    const texts =
+      currentLanguage === "ar"
+        ? ["حرية كاملة", "ذكاء اصطناعي متقدم", "خصوصية مطلقة", "إبداع بلا حدود"]
+        : [
+            "Complete Freedom",
+            "Advanced AI",
+            "Total Privacy",
+            "Limitless Creativity",
+          ];
+
+    let textIndex = 0;
+    let charIndex = 0;
+    let isDeleting = false;
+
+    const type = () => {
+      const currentText = texts[textIndex];
+
+      if (isDeleting) {
+        setTypingText(currentText.substring(0, charIndex - 1));
+        charIndex--;
+      } else {
+        setTypingText(currentText.substring(0, charIndex + 1));
+        charIndex++;
+      }
+
+      if (!isDeleting && charIndex === currentText.length) {
+        setTimeout(() => {
+          isDeleting = true;
+        }, 2000);
+      } else if (isDeleting && charIndex === 0) {
+        isDeleting = false;
+        textIndex = (textIndex + 1) % texts.length;
+      }
+
+      setTimeout(type, isDeleting ? 50 : 100);
+    };
+
+    setTimeout(() => {
+      setShowSecondary(true);
+      type();
+    }, 1000);
+  }, [currentLanguage]);
+
   const features = [
     {
       icon: "🛡️",
