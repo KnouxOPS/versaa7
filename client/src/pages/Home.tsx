@@ -37,6 +37,13 @@ export default function Home() {
   const [localMessage, setLocalMessage] = useState("");
   const [showControlRoom, setShowControlRoom] = useState(false);
 
+  // Live Now Panel state
+  const [liveStatus, setLiveStatus] = useState<"Running" | "Paused" | "Error">(
+    "Running",
+  );
+  const [currentTool, setCurrentTool] = useState("Knoux VERSA");
+  const [currentModel, setCurrentModel] = useState("SDXL Turbo");
+
   const {
     transform,
     isProcessing,
@@ -150,7 +157,7 @@ export default function Home() {
           throw new Error(result.error || "فشلت المعالجة المحلية");
         }
       } catch (error) {
-        console.error("خطأ في المعالج�� المحلية:", error);
+        console.error("خطأ في المعالجة المحلية:", error);
         setError(
           error instanceof Error ? error.message : "خطأ في المعالجة المحلية",
         );
