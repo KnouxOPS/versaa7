@@ -168,10 +168,7 @@ export function getCurrentMetrics(): PerformanceMetrics & {
       arch: process.arch,
       uptime: process.uptime(),
       cpuUsage: process.cpuUsage(),
-      loadAverage:
-        process.platform === "linux"
-          ? await import("os").then((os) => os.loadavg())
-          : null,
+      loadAverage: process.platform === "linux" ? loadavg() : null,
     },
   };
 }
