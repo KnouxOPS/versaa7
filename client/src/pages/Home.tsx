@@ -192,6 +192,20 @@ export default function Home() {
     }));
   };
 
+  // Sync LiveNowPanel with processing state
+  useEffect(() => {
+    if (isProcessing || isLocalProcessing) {
+      setLiveStatus("Running");
+      setCurrentModel(
+        selectedService === "magic-morph" ? "SDXL Turbo" : "Stable Diffusion",
+      );
+    } else if (error) {
+      setLiveStatus("Error");
+    } else {
+      setLiveStatus("Paused");
+    }
+  }, [isProcessing, isLocalProcessing, error, selectedService]);
+
   // Electron API integration
   useEffect(() => {
     if (typeof window !== "undefined" && (window as any).electronAPI) {
