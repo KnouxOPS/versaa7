@@ -390,6 +390,8 @@ const translations = {
       "No area selected - AI will process the entire image",
     "Failed to load image. Please try again.":
       "Failed to load image. Please try again.",
+    "30 أداة ذكاء اصطناعي محلية • خصوصية كاملة • بلا رقابة":
+      "30 Local AI Tools • Complete Privacy • No Censorship",
   },
   ar: {
     // Navigation & Header
@@ -638,7 +640,7 @@ const translations = {
     "VIP Exclusive": "VIP حصري",
     "AI Tools Available": "أداة ذكاء اصطناعي متاحة",
     Category: "فئة",
-    "Adult Content Warning": "تحذير محتوى للبالغين",
+    "Adult Content Warning": "تحذير محتوى للب��لغين",
     "This tool contains adult content (18+). By proceeding, you acknowledge that you are of legal age and accept full responsibility for your use of this content.":
       "تحتوي هذه الأداة على محتوى لل��الغين (+18). بالمتابعة، تقر أنك في السن القانونية وتتحمل المسؤولية الكاملة عن استخدام هذا المحتوى.",
     "I Accept (18+)": "أوافق (+18)",
@@ -663,7 +665,7 @@ const translations = {
     "Core Principles": "المبادئ الأساسية",
     "100% Local Processing": "معالجة محلية 100%",
     "No internet, no external APIs. Every tool, every AI model, every operation happens exclusively on the user's device.":
-      "لا إنترنت، لا APIs خارجية. كل أداة، كل نموذج ذكاء اصطناعي، كل عملية تحدث حصرياً على جهاز المستخدم.",
+      "لا إنترنت، لا APIs خارجية. كل أداة، كل نموذج ذكاء اصطناعي، كل عمل��ة تحدث حصرياً على جهاز المستخدم.",
     "100% Complete Privacy": "خصوصية كاملة 100%",
     "No images or data are uploaded to any external server, ensuring absolute security and privacy of user images.":
       "لا يتم رفع أي صور أو بيانات لأي خادم خارجي، مما يضمن الأمان والخصوصية المطلقة لصور المستخدم.",
@@ -706,7 +708,7 @@ const translations = {
       "لا تصفية محتوى أو رقابة. أدوات للبالغين متاحة مع تحذيرات واضحة لمسؤولية المستخدم. حرية إبداعية كاملة.",
     "User Responsibility Notice": "إشعار مسؤولية المستخدم",
     "While we provide powerful uncensored tools, users bear complete responsibility for their usage. We include clear warnings for sensitive tools and remind users that using content for illegal or harmful purposes is their personal responsibility alone.":
-      "بينما نوفر أدوات قوية بلا قيود، يتحمل المستخدمون المسؤولية الكاملة عن استخدامها. نتضمن تحذيرات واضحة للأدوات الحساسة ونذكر المستخدمين أن استخدام المحتوى لأغراض غير قانونية أو ضارة هو مسؤوليتهم الشخصية وحدهم.",
+      "بينما نوفر أدوات قوية بلا قيود، يتحمل ال��ستخدمون المسؤولية الكاملة عن استخدامها. نتضمن تحذيرات واضحة للأدوات الحساسة ونذكر المستخدمين أن استخدام المحتوى لأغراض غير قانونية أو ضارة هو مسؤوليتهم الشخصية وحدهم.",
     "Technical Architecture": "البنية التقنية",
     Backend: "الخلفية",
     Frontend: "الواجهة الأمامية",
