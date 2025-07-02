@@ -53,6 +53,27 @@ app.set("trust proxy", 1);
 // Add monitoring middleware
 app.use(monitorPerformance);
 
+// Add headers for Builder.io iframe support
+app.use((req, res, next) => {
+  // Allow embedding in Builder.io iframes
+  res.setHeader("X-Frame-Options", "ALLOWALL");
+  res.setHeader("Content-Security-Policy", "frame-ancestors *;");
+
+  // Additional CORS headers for Builder.io
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader(
+    "Access-Control-Allow-Methods",
+    "GET, POST, PUT, DELETE, OPTIONS",
+  );
+  res.setHeader(
+    "Access-Control-Allow-Headers",
+    "Content-Type, Authorization, X-Requested-With",
+  );
+  res.setHeader("Access-Control-Allow-Credentials", "true");
+
+  next();
+});
+
 app.use((req, res, next) => {
   const start = Date.now();
   const path = req.path;
