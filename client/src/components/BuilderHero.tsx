@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -248,7 +248,7 @@ export default function BuilderHero({
             </h3>
             <p className="text-gray-300">
               {currentLanguage === "ar"
-                ? "مجموعة شاملة من الأدوات المتطورة لجميع احتياجاتك الإبداعية"
+                ? "مجموعة شا��لة من الأدوات المتطورة لجميع احتياجاتك الإبداعية"
                 : "Complete suite of advanced tools for all your creative needs"}
             </p>
           </div>
