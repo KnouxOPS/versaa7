@@ -11,6 +11,7 @@ import { VIPModal } from "@/components/VIPModal";
 import { TechnicalDashboard } from "@/components/TechnicalDashboard";
 import { AdvancedAIModelsManager } from "@/components/AdvancedAIModelsManager";
 import { ComprehensiveModelManager } from "@/components/ComprehensiveModelManager";
+import { KnouxControlRoom } from "@/components/ControlRoom/KnouxControlRoom";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useImageTransform } from "@/hooks/useImageTransform";
 import { processImageLocally } from "@/lib/localAIProcessor";
@@ -136,7 +137,7 @@ export default function Home() {
             metadata: result.metadata,
           };
 
-          // عرض النتيجة
+          // عرض ��لنتيجة
           setResult(mockTransformation);
           setLocalMessage("تمت المعالجة بنجاح! ✨");
 
