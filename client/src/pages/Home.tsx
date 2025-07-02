@@ -57,14 +57,6 @@ export default function Home() {
     setError,
   } = useImageTransform();
 
-  // Statistics
-  const [stats, setStats] = useState({
-    totalTools: 30,
-    activeUsers: 1247,
-    processedImages: 45892,
-    uptime: "99.9%",
-  });
-
   const handleImageUpload = (imageUrl: string) => {
     setUploadedImage(imageUrl);
     reset();
@@ -228,27 +220,26 @@ export default function Home() {
   }, [reset]);
 
   return (
-    <div className="min-h-screen relative overflow-x-hidden">
+    <div className="min-h-screen flex flex-col relative overflow-hidden">
       <NeuralBackground />
 
-      {/* Navigation Bar */}
-      <nav className="glass-strong fixed top-0 left-0 right-0 z-50 border-b border-cyan-400/20">
-        <div className="container mx-auto px-6 py-4">
+      {/* Header Navigation */}
+      <header className="glass-strong border-b border-cyan-400/20 z-50">
+        <div className="container mx-auto px-4 py-3">
           <div className="flex justify-between items-center">
-            {/* Logo Section */}
-            <div className="flex items-center gap-4">
+            {/* Logo */}
+            <div className="flex items-center gap-3">
               <div className="relative">
-                <div className="w-14 h-14 rounded-full bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 p-1 animate-pulse-glow">
+                <div className="w-12 h-12 rounded-full bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 p-1 animate-pulse-glow">
                   <div className="w-full h-full bg-gray-900 rounded-full flex items-center justify-center">
-                    <span className="text-2xl font-bold text-cyan-400 animate-neon-text">
+                    <span className="text-xl font-bold text-cyan-400 animate-neon-text">
                       K
                     </span>
                   </div>
                 </div>
-                <div className="absolute -inset-2 bg-cyan-400/20 rounded-full blur-md animate-pulse"></div>
               </div>
               <div>
-                <h1 className="text-2xl font-bold bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent">
+                <h1 className="text-xl font-bold bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent">
                   KNOUX VERSA
                 </h1>
                 <p className="text-xs text-gray-400">
@@ -257,48 +248,8 @@ export default function Home() {
               </div>
             </div>
 
-            {/* Navigation Controls */}
-            <div className="flex items-center gap-3">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setShowControlRoom(true)}
-                className="glass border-orange-400/30 hover:bg-orange-400/10 text-orange-400 hover:shadow-[0_0_20px_rgba(251,146,60,0.3)]"
-              >
-                <i className="fas fa-cogs mr-2"></i>
-                {currentLanguage === "en" ? "Control Room" : "غرفة التحكم"}
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={toggleLanguage}
-                className="glass border-cyan-400/30 hover:bg-cyan-400/10 text-cyan-400 hover:shadow-[0_0_20px_rgba(0,255,239,0.3)]"
-              >
-                <i className="fas fa-globe mr-2"></i>
-                {currentLanguage === "en" ? "العربية" : "English"}
-              </Button>
-              <Link href="/about">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="glass border-purple-400/30 hover:bg-purple-400/10 text-purple-400 hover:shadow-[0_0_20px_rgba(139,92,246,0.3)]"
-                >
-                  <i className="fas fa-info-circle mr-2"></i>
-                  {t("About")}
-                </Button>
-              </Link>
-            </div>
-          </div>
-        </div>
-      </nav>
-
-      {/* Main Content */}
-      <main className="pt-20">
-        <div className="container mx-auto px-6 max-w-7xl">
-          {/* Hero Section */}
-          <section className="py-20 text-center relative">
-            {/* Floating Live Panel */}
-            <div className="fixed top-24 left-6 z-40 hidden lg:block">
+            {/* Live Panel - في الهيدر */}
+            <div className="flex-1 flex justify-center">
               <LiveNowPanel
                 tool={currentTool}
                 model={currentModel}
@@ -321,190 +272,170 @@ export default function Home() {
                     "فتح سجل النشاط...\n\n🧠 AI Inference Engine\n⚡ Processing Speed: 2.3s\n🔒 Privacy: Maximum\n📊 Success Rate: 98.7%",
                   );
                 }}
+                className="max-w-sm"
               />
             </div>
 
-            <div className="max-w-4xl mx-auto">
-              <h2 className="text-5xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-400 bg-clip-text text-transparent animate-gradient-shift">
-                🧠 {t("30 أداة ذكاء اصطناعي")}
-              </h2>
-              <p className="text-xl text-gray-300 mb-8 leading-relaxed max-w-3xl mx-auto">
-                {t("خصوصية كاملة • بلا رقابة • معالجة محلية متقدمة")}
-              </p>
-
-              {/* Feature Badges */}
-              <div className="flex flex-wrap justify-center gap-4 mb-12">
-                <Badge className="glass px-6 py-3 border border-cyan-400/30 hover:border-cyan-400/50 transition-all duration-300 hover:scale-105">
-                  <i className="fas fa-microchip text-cyan-400 mr-2"></i>
-                  <span className="text-cyan-400 font-semibold">
-                    Local Inference Engine
-                  </span>
-                </Badge>
-                <Badge className="glass px-6 py-3 border border-purple-400/30 hover:border-purple-400/50 transition-all duration-300 hover:scale-105">
-                  <i className="fas fa-brain text-purple-400 mr-2"></i>
-                  <span className="text-purple-400 font-semibold">
-                    Deep Multi-Modal Models
-                  </span>
-                </Badge>
-                <Badge className="glass px-6 py-3 border border-green-400/30 hover:border-green-400/50 transition-all duration-300 hover:scale-105">
-                  <i className="fas fa-project-diagram text-green-400 mr-2"></i>
-                  <span className="text-green-400 font-semibold">
-                    Modular Architecture
-                  </span>
-                </Badge>
-                <Badge className="glass px-6 py-3 border border-pink-400/30 hover:border-pink-400/50 transition-all duration-300 hover:scale-105">
-                  <i className="fas fa-shield-alt text-pink-400 mr-2"></i>
-                  <span className="text-pink-400 font-semibold">
-                    Zero Network Dependency
-                  </span>
-                </Badge>
-              </div>
-
-              {/* Stats Cards */}
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
-                <Card className="glass-strong p-4 border border-cyan-400/30 hover:border-cyan-400/50 transition-all duration-300 hover:scale-105">
-                  <div className="text-center">
-                    <i className="fas fa-robot text-2xl text-cyan-400 mb-2"></i>
-                    <div className="text-xl font-bold text-cyan-400">
-                      {stats.totalTools}
-                    </div>
-                    <div className="text-xs text-gray-400">AI Tools</div>
-                  </div>
-                </Card>
-                <Card className="glass-strong p-4 border border-green-400/30 hover:border-green-400/50 transition-all duration-300 hover:scale-105">
-                  <div className="text-center">
-                    <i className="fas fa-users text-2xl text-green-400 mb-2"></i>
-                    <div className="text-xl font-bold text-green-400">
-                      {stats.activeUsers.toLocaleString()}
-                    </div>
-                    <div className="text-xs text-gray-400">Active Users</div>
-                  </div>
-                </Card>
-                <Card className="glass-strong p-4 border border-purple-400/30 hover:border-purple-400/50 transition-all duration-300 hover:scale-105">
-                  <div className="text-center">
-                    <i className="fas fa-images text-2xl text-purple-400 mb-2"></i>
-                    <div className="text-xl font-bold text-purple-400">
-                      {stats.processedImages.toLocaleString()}
-                    </div>
-                    <div className="text-xs text-gray-400">
-                      Images Processed
-                    </div>
-                  </div>
-                </Card>
-                <Card className="glass-strong p-4 border border-pink-400/30 hover:border-pink-400/50 transition-all duration-300 hover:scale-105">
-                  <div className="text-center">
-                    <i className="fas fa-heartbeat text-2xl text-pink-400 mb-2"></i>
-                    <div className="text-xl font-bold text-pink-400">
-                      {stats.uptime}
-                    </div>
-                    <div className="text-xs text-gray-400">Uptime</div>
-                  </div>
-                </Card>
-              </div>
-
-              {/* Success Motto */}
-              <Card className="glass-strong max-w-2xl mx-auto p-6 border border-yellow-400/30">
-                <div className="text-center">
-                  <p className="text-yellow-400 font-bold text-lg mb-2">
-                    🔥 {t("كلمة السر للنجاح")}
-                  </p>
-                  <p className="text-2xl font-bold bg-gradient-to-r from-cyan-400 to-purple-600 bg-clip-text text-transparent">
-                    "حرية بلا حدود مع KnouxAI"
-                  </p>
-                </div>
-              </Card>
+            {/* Controls */}
+            <div className="flex items-center gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setShowControlRoom(true)}
+                className="glass border-orange-400/30 hover:bg-orange-400/10 text-orange-400"
+              >
+                <i className="fas fa-cogs mr-2"></i>
+                <span className="hidden md:inline">
+                  {currentLanguage === "en" ? "Control Room" : "غرفة التحكم"}
+                </span>
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={toggleLanguage}
+                className="glass border-cyan-400/30 hover:bg-cyan-400/10 text-cyan-400"
+              >
+                <i className="fas fa-globe mr-2"></i>
+                <span className="hidden md:inline">
+                  {currentLanguage === "en" ? "العربية" : "English"}
+                </span>
+              </Button>
+              <Link href="/about">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="glass border-purple-400/30 hover:bg-purple-400/10 text-purple-400"
+                >
+                  <i className="fas fa-info-circle mr-2"></i>
+                  <span className="hidden md:inline">{t("About")}</span>
+                </Button>
+              </Link>
             </div>
-          </section>
+          </div>
+        </div>
+      </header>
 
-          {/* Main Workspace */}
-          <section className="pb-20">
-            <Tabs
-              value={activeTab}
-              onValueChange={setActiveTab}
-              className="w-full"
-            >
-              <TabsList className="grid w-full grid-cols-5 glass-strong rounded-2xl p-2 mb-8 border border-cyan-400/30">
-                <TabsTrigger
-                  value="local_ai"
-                  className="data-[state=active]:bg-cyan-400/20 data-[state=active]:text-cyan-400 data-[state=active]:shadow-[0_0_20px_rgba(0,255,239,0.2)] transition-all duration-300"
-                >
-                  <i className="fas fa-robot mr-2"></i>
-                  <span className="hidden sm:inline">30 أداة AI محلية</span>
-                </TabsTrigger>
-                <TabsTrigger
-                  value="technical"
-                  className="data-[state=active]:bg-orange-400/20 data-[state=active]:text-orange-400 data-[state=active]:shadow-[0_0_20px_rgba(251,146,60,0.2)] transition-all duration-300"
-                >
-                  <i className="fas fa-microchip mr-2"></i>
-                  <span className="hidden sm:inline">وحدة تحكم تقنية</span>
-                </TabsTrigger>
-                <TabsTrigger
-                  value="models"
-                  className="data-[state=active]:bg-purple-400/20 data-[state=active]:text-purple-400 data-[state=active]:shadow-[0_0_20px_rgba(139,92,246,0.2)] transition-all duration-300"
-                >
-                  <i className="fas fa-brain mr-2"></i>
-                  <span className="hidden sm:inline">إدارة النماذج</span>
-                </TabsTrigger>
-                <TabsTrigger
-                  value="services"
-                  className="data-[state=active]:bg-blue-400/20 data-[state=active]:text-blue-400 data-[state=active]:shadow-[0_0_20px_rgba(59,130,246,0.2)] transition-all duration-300"
-                >
-                  <i className="fas fa-cloud mr-2"></i>
-                  <span className="hidden sm:inline">خدمات السحابة</span>
-                </TabsTrigger>
-                <TabsTrigger
-                  value="workspace"
-                  className="data-[state=active]:bg-green-400/20 data-[state=active]:text-green-400 data-[state=active]:shadow-[0_0_20px_rgba(34,197,94,0.2)] transition-all duration-300"
-                >
-                  <i className="fas fa-magic mr-2"></i>
-                  <span className="hidden sm:inline">ورشة العمل</span>
-                </TabsTrigger>
-              </TabsList>
+      {/* Main Content - ملء الشاشة */}
+      <main className="flex-1 flex flex-col">
+        <div className="container mx-auto px-4 py-4 flex-1 flex flex-col">
+          {/* Quick Stats Bar */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
+            <Card className="glass-strong p-3 border border-cyan-400/30 text-center">
+              <div className="text-lg font-bold text-cyan-400">30</div>
+              <div className="text-xs text-gray-400">AI Tools</div>
+            </Card>
+            <Card className="glass-strong p-3 border border-green-400/30 text-center">
+              <div className="text-lg font-bold text-green-400">1,247</div>
+              <div className="text-xs text-gray-400">Active Users</div>
+            </Card>
+            <Card className="glass-strong p-3 border border-purple-400/30 text-center">
+              <div className="text-lg font-bold text-purple-400">45.8K</div>
+              <div className="text-xs text-gray-400">Images Processed</div>
+            </Card>
+            <Card className="glass-strong p-3 border border-pink-400/30 text-center">
+              <div className="text-lg font-bold text-pink-400">99.9%</div>
+              <div className="text-xs text-gray-400">Uptime</div>
+            </Card>
+          </div>
 
-              {/* Tab Contents */}
-              <div className="min-h-[600px]">
-                <TabsContent value="local_ai" className="mt-0">
-                  <Card className="glass-strong rounded-3xl border border-cyan-400/30 overflow-hidden">
-                    <MainImageEditor />
-                  </Card>
-                </TabsContent>
+          {/* Tabs Navigation */}
+          <Tabs
+            value={activeTab}
+            onValueChange={setActiveTab}
+            className="flex-1 flex flex-col"
+          >
+            <TabsList className="grid w-full grid-cols-5 glass-strong rounded-xl p-1 mb-4 border border-cyan-400/30">
+              <TabsTrigger
+                value="local_ai"
+                className="data-[state=active]:bg-cyan-400/20 data-[state=active]:text-cyan-400 transition-all duration-300"
+              >
+                <i className="fas fa-robot mr-1 md:mr-2"></i>
+                <span className="text-xs md:text-sm">30 أداة AI</span>
+              </TabsTrigger>
+              <TabsTrigger
+                value="technical"
+                className="data-[state=active]:bg-orange-400/20 data-[state=active]:text-orange-400 transition-all duration-300"
+              >
+                <i className="fas fa-microchip mr-1 md:mr-2"></i>
+                <span className="text-xs md:text-sm">تحكم تقني</span>
+              </TabsTrigger>
+              <TabsTrigger
+                value="models"
+                className="data-[state=active]:bg-purple-400/20 data-[state=active]:text-purple-400 transition-all duration-300"
+              >
+                <i className="fas fa-brain mr-1 md:mr-2"></i>
+                <span className="text-xs md:text-sm">النماذج</span>
+              </TabsTrigger>
+              <TabsTrigger
+                value="services"
+                className="data-[state=active]:bg-blue-400/20 data-[state=active]:text-blue-400 transition-all duration-300"
+              >
+                <i className="fas fa-cloud mr-1 md:mr-2"></i>
+                <span className="text-xs md:text-sm">السحابة</span>
+              </TabsTrigger>
+              <TabsTrigger
+                value="workspace"
+                className="data-[state=active]:bg-green-400/20 data-[state=active]:text-green-400 transition-all duration-300"
+              >
+                <i className="fas fa-magic mr-1 md:mr-2"></i>
+                <span className="text-xs md:text-sm">ورشة العمل</span>
+              </TabsTrigger>
+            </TabsList>
 
-                <TabsContent value="technical" className="mt-0">
-                  <Card className="glass-strong rounded-3xl p-8 border border-orange-400/30">
+            {/* Tab Contents - ملء المساحة المتبقية */}
+            <div className="flex-1">
+              <TabsContent value="local_ai" className="h-full mt-0">
+                <Card className="glass-strong rounded-2xl border border-cyan-400/30 h-full overflow-hidden">
+                  <MainImageEditor />
+                </Card>
+              </TabsContent>
+
+              <TabsContent value="technical" className="h-full mt-0">
+                <Card className="glass-strong rounded-2xl border border-orange-400/30 h-full overflow-hidden">
+                  <div className="p-4 h-full">
                     <TechnicalDashboard />
-                  </Card>
-                </TabsContent>
+                  </div>
+                </Card>
+              </TabsContent>
 
-                <TabsContent value="models" className="mt-0">
-                  <Card className="glass-strong rounded-3xl p-8 border border-purple-400/30">
+              <TabsContent value="models" className="h-full mt-0">
+                <Card className="glass-strong rounded-2xl border border-purple-400/30 h-full overflow-hidden">
+                  <div className="p-4 h-full">
                     <ComprehensiveModelManager />
-                  </Card>
-                </TabsContent>
+                  </div>
+                </Card>
+              </TabsContent>
 
-                <TabsContent value="services" className="mt-0">
-                  <Card className="glass-strong rounded-3xl border border-blue-400/30 overflow-hidden">
-                    <ServicesLayout
-                      selectedService={selectedService}
-                      onServiceChange={setSelectedService}
-                      customizations={serviceCustomizations}
-                      onCustomizationChange={handleCustomizationChange}
-                    />
-                  </Card>
-                </TabsContent>
+              <TabsContent value="services" className="h-full mt-0">
+                <Card className="glass-strong rounded-2xl border border-blue-400/30 h-full overflow-hidden">
+                  <ServicesLayout
+                    selectedService={selectedService}
+                    onServiceChange={setSelectedService}
+                    customizations={serviceCustomizations}
+                    onCustomizationChange={handleCustomizationChange}
+                  />
+                </Card>
+              </TabsContent>
 
-                <TabsContent value="workspace" className="mt-0">
-                  <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
-                    <div className="xl:col-span-2">
-                      <Card className="glass-strong rounded-2xl p-6 border border-green-400/30">
+              <TabsContent value="workspace" className="h-full mt-0">
+                <div className="grid grid-cols-1 xl:grid-cols-3 gap-4 h-full">
+                  {/* Image Canvas - أكبر مساحة */}
+                  <div className="xl:col-span-2">
+                    <Card className="glass-strong rounded-2xl border border-green-400/30 h-full overflow-hidden">
+                      <div className="p-4 h-full">
                         <SimpleImageCanvas
                           onImageUpload={handleImageUpload}
                           onSelectionChange={handleSelectionChange}
                           uploadedImage={uploadedImage}
                         />
-                      </Card>
-                    </div>
-                    <div className="space-y-6">
-                      <Card className="glass-strong rounded-2xl p-6 border border-green-400/30">
+                      </div>
+                    </Card>
+                  </div>
+
+                  {/* Controls Panel */}
+                  <div className="space-y-4 flex flex-col h-full">
+                    <Card className="glass-strong rounded-2xl border border-green-400/30 flex-1">
+                      <div className="p-4 h-full">
                         <PromptNexus
                           onTransform={handleTransform}
                           isProcessing={isProcessing || isLocalProcessing}
@@ -513,21 +444,24 @@ export default function Home() {
                             serviceCustomizations[selectedService]
                           }
                         />
-                      </Card>
-                      {result && (
-                        <Card className="glass-strong rounded-2xl p-6 border border-green-400/30">
+                      </div>
+                    </Card>
+
+                    {result && (
+                      <Card className="glass-strong rounded-2xl border border-green-400/30 flex-1">
+                        <div className="p-4 h-full">
                           <ResultsComparison
                             transformation={result}
                             onNewTransform={reset}
                           />
-                        </Card>
-                      )}
-                    </div>
+                        </div>
+                      </Card>
+                    )}
                   </div>
-                </TabsContent>
-              </div>
-            </Tabs>
-          </section>
+                </div>
+              </TabsContent>
+            </div>
+          </Tabs>
         </div>
       </main>
 
