@@ -8,7 +8,7 @@ import { ProcessingModal } from "@/components/ProcessingModal";
 import { ResultsComparison } from "@/components/ResultsComparison";
 import { VIPModal } from "@/components/VIPModal";
 import { TechnicalDashboard } from "@/components/TechnicalDashboard";
-import { AIModelsManager } from "@/components/AIModelsManager";
+import { AdvancedAIModelsManager } from "@/components/AdvancedAIModelsManager";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useImageTransform } from "@/hooks/useImageTransform";
 import { processImageLocally } from "@/lib/localAIProcessor";
@@ -392,7 +392,7 @@ export default function Home() {
 
             {/* AI Models Manager Tab */}
             <TabsContent value="models" className="mt-8">
-              <AIModelsManager />
+              <AdvancedAIModelsManager />
             </TabsContent>
 
             {/* Services Tab */}
