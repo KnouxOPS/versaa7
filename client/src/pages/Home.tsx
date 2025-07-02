@@ -19,6 +19,7 @@ import { processImageLocally } from "@/lib/localAIProcessor";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Badge } from "@/components/ui/badge";
 import { Link } from "wouter";
 
 export default function Home() {
@@ -56,9 +57,17 @@ export default function Home() {
     setError,
   } = useImageTransform();
 
+  // Statistics
+  const [stats, setStats] = useState({
+    totalTools: 30,
+    activeUsers: 1247,
+    processedImages: 45892,
+    uptime: "99.9%",
+  });
+
   const handleImageUpload = (imageUrl: string) => {
     setUploadedImage(imageUrl);
-    reset(); // Clear any previous results
+    reset();
   };
 
   const handleSelectionChange = (selection: string) => {
@@ -85,58 +94,38 @@ export default function Home() {
       "gender_swap",
       "makeup_artist",
       "body_reshape",
-      "clothing_swap",
-      "tattoo_artist",
-      "muscle_enhancer",
-      "bg_remover",
-      "bg_replacer",
-      "lighting_master",
-      "style_transfer",
-      "cartoonizer",
-      "colorizer",
-      "super_resolution",
-      "denoiser",
-      "sharpener",
-      "object_remover",
-      "object_replacer",
-      "smart_crop",
-      "image_merger",
-      "pose_editor",
-      "hair_stylist",
-      "eye_color_changer",
-      "teeth_whitener",
-      "scar_remover",
-      "virtual_jewelry",
-      "vintage_filter",
+      "hair_color",
+      "eye_color",
+      "smile_enhance",
+      "skin_smooth",
+      "face_slim",
+      "nose_reshape",
+      "lip_enhance",
+      "magic-morph",
     ];
 
-    // استخدام المعالجة المحلية للأدوات المحلية
     if (localTools.includes(selectedService)) {
-      setIsLocalProcessing(true);
-      setLocalProgress(0);
-      setLocalMessage("بدء المعالجة المحلية...");
-
       try {
-        const result = await processImageLocally(
-          selectedService,
-          uploadedImage,
-          {
-            ...serviceCustomizations[selectedService],
-            prompt,
-            quality,
-            selectionData,
-          },
-          (progress, message) => {
+        setIsLocalProcessing(true);
+        setLocalProgress(0);
+        setLocalMessage("تحضير النموذج المحلي...");
+
+        const result = await processImageLocally({
+          imageUrl: uploadedImage,
+          tool: selectedService,
+          prompt,
+          quality,
+          onProgress: (progress, message) => {
             setLocalProgress(progress);
             setLocalMessage(message);
           },
-        );
+        });
 
-        if (result.success && result.processedImage) {
-          // إنشاء كائن transformation مؤقت للعرض
+        if (result.success && result.processedImageUrl) {
           const mockTransformation = {
-            id: Date.now(),
-            transformedImageUrl: result.processedImage,
+            id: Date.now().toString(),
+            originalImageUrl: uploadedImage,
+            transformedImageUrl: result.processedImageUrl,
             prompt,
             service: selectedService,
             quality,
@@ -146,7 +135,6 @@ export default function Home() {
             metadata: result.metadata,
           };
 
-          // عرض النتيجة
           setResult(mockTransformation);
           setLocalMessage("تمت المعالجة بنجاح! ✨");
 
@@ -164,7 +152,6 @@ export default function Home() {
         setIsLocalProcessing(false);
       }
     } else {
-      // استخدام المعالجة السحابية للأدوات الأخرى
       await transform({
         originalImageUrl: uploadedImage,
         prompt,
@@ -211,7 +198,6 @@ export default function Home() {
     if (typeof window !== "undefined" && (window as any).electronAPI) {
       const electronAPI = (window as any).electronAPI;
 
-      // Listen for menu events
       electronAPI.onNewTransformation(() => {
         reset();
         setUploadedImage(null);
@@ -219,7 +205,6 @@ export default function Home() {
       });
 
       electronAPI.onOpenImage((filePath: string) => {
-        // Convert file path to URL for display
         const fileUrl = `file://${filePath}`;
         setUploadedImage(fileUrl);
       });
@@ -233,7 +218,6 @@ export default function Home() {
         setShowVIPModal(true);
       });
 
-      // Cleanup listeners on unmount
       return () => {
         electronAPI.removeAllListeners("new-transformation");
         electronAPI.removeAllListeners("open-image");
@@ -247,355 +231,350 @@ export default function Home() {
     <div className="min-h-screen relative overflow-x-hidden">
       <NeuralBackground />
 
-      {/* Navigation */}
-      <nav className="glass fixed top-0 left-0 right-0 z-50 p-4">
-        <div className="container mx-auto flex justify-between items-center">
-          {/* Logo */}
-          <div className="flex items-center space-x-3">
-            <div className="w-12 h-12 rounded-full bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 p-1 animate-pulse-glow">
-              <div className="w-full h-full bg-gray-900 rounded-full flex items-center justify-center">
-                <span className="text-xl font-bold text-cyan-400 neon-text">
-                  K
-                </span>
+      {/* Navigation Bar */}
+      <nav className="glass-strong fixed top-0 left-0 right-0 z-50 border-b border-cyan-400/20">
+        <div className="container mx-auto px-6 py-4">
+          <div className="flex justify-between items-center">
+            {/* Logo Section */}
+            <div className="flex items-center gap-4">
+              <div className="relative">
+                <div className="w-14 h-14 rounded-full bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 p-1 animate-pulse-glow">
+                  <div className="w-full h-full bg-gray-900 rounded-full flex items-center justify-center">
+                    <span className="text-2xl font-bold text-cyan-400 animate-neon-text">
+                      K
+                    </span>
+                  </div>
+                </div>
+                <div className="absolute -inset-2 bg-cyan-400/20 rounded-full blur-md animate-pulse"></div>
+              </div>
+              <div>
+                <h1 className="text-2xl font-bold bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent">
+                  KNOUX VERSA
+                </h1>
+                <p className="text-xs text-gray-400">
+                  {t("The Uncensored AI Nexus")}
+                </p>
               </div>
             </div>
-            <div>
-              <h1 className="text-2xl font-bold neon-text text-cyan-400">
-                KNOUX VERSA
-              </h1>
-              <p className="text-xs text-gray-400">
-                {t("The Uncensored AI Nexus")}
-              </p>
-            </div>
-          </div>
 
-          {/* Controls */}
-          <div className="flex items-center space-x-4">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setShowControlRoom(true)}
-              className="glass border-orange-400/30 hover:bg-orange-400/10 text-orange-400"
-            >
-              <i className="fas fa-cogs mr-2"></i>
-              {currentLanguage === "en" ? "Control Room" : "غرفة التحكم"}
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={toggleLanguage}
-              className="glass border-cyan-400/30 hover:bg-cyan-400/10"
-            >
-              <i className="fas fa-globe mr-2"></i>
-              {currentLanguage === "en" ? "العربية" : "English"}
-            </Button>
-            <Link href="/about">
+            {/* Navigation Controls */}
+            <div className="flex items-center gap-3">
               <Button
                 variant="outline"
                 size="sm"
-                className="glass border-purple-400/30 hover:bg-purple-400/10"
+                onClick={() => setShowControlRoom(true)}
+                className="glass border-orange-400/30 hover:bg-orange-400/10 text-orange-400 hover:shadow-[0_0_20px_rgba(251,146,60,0.3)]"
               >
-                <i className="fas fa-info-circle mr-2"></i>
-                {t("About")}
+                <i className="fas fa-cogs mr-2"></i>
+                {currentLanguage === "en" ? "Control Room" : "غرفة التحكم"}
               </Button>
-            </Link>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={toggleLanguage}
+                className="glass border-cyan-400/30 hover:bg-cyan-400/10 text-cyan-400 hover:shadow-[0_0_20px_rgba(0,255,239,0.3)]"
+              >
+                <i className="fas fa-globe mr-2"></i>
+                {currentLanguage === "en" ? "العربية" : "English"}
+              </Button>
+              <Link href="/about">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="glass border-purple-400/30 hover:bg-purple-400/10 text-purple-400 hover:shadow-[0_0_20px_rgba(139,92,246,0.3)]"
+                >
+                  <i className="fas fa-info-circle mr-2"></i>
+                  {t("About")}
+                </Button>
+              </Link>
+            </div>
           </div>
         </div>
       </nav>
 
-      {/* Live Now Panel - Floating */}
-      <div className="fixed top-24 left-4 z-40">
-        <LiveNowPanel
-          tool={currentTool}
-          model={currentModel}
-          privacy="No Censorship"
-          status={liveStatus}
-          onStop={() => {
-            setLiveStatus("Paused");
-            console.log("تم إيقاف المهمة");
-          }}
-          onSwitch={() => {
-            setCurrentTool(
-              currentTool === "Knoux VERSA" ? "Face Morph" : "Knoux VERSA",
-            );
-            console.log("تم تبديل الأداة");
-          }}
-          onShowLogs={() => {
-            alert(
-              "فتح سجل النشاط...\n\n🧠 AI Inference Engine\n⚡ Processing Speed: 2.3s\n🔒 Privacy: Maximum\n📊 Success Rate: 98.7%",
-            );
-          }}
-        />
-      </div>
-
       {/* Main Content */}
-      <main className="pt-24 pb-12">
-        <div className="container mx-auto px-4 max-w-7xl">
+      <main className="pt-20">
+        <div className="container mx-auto px-6 max-w-7xl">
           {/* Hero Section */}
-          <div className="text-center mb-12">
-            <h2 className="text-responsive-xl font-bold mb-4 neon-text text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-600 animate-float">
-              🧠 {t("30 أداة ذكاء اصطناعي محلية • خصوصية كاملة • بلا رقابة")}
-            </h2>
-            <p className="text-responsive-md text-gray-300 max-w-6xl mx-auto mb-6 leading-relaxed">
-              {t(
-                "بنية برمجية شاملة موجهة لمعالجة الصور باستخدام تقنيات الذكاء الاصطناعي التوليدي عبر نماذج عميقة متعددة الوسائط. صُمّم ليشكل بيئة معيارية ذات استقلالية تشغيلية عالية، ويتيح تحكمًا دلاليًا مرنًا في مكونات الصورة",
-              )}
-            </p>
-
-            {/* شارات المميزات */}
-            <div className="flex flex-wrap justify-center gap-4 mb-8">
-              <div className="glass rounded-full px-6 py-3 border border-cyan-400/30">
-                <i className="fas fa-microchip text-cyan-400 mr-2"></i>
-                <span className="text-cyan-400 font-semibold">
-                  {t("Local Inference Engine")}
-                </span>
-              </div>
-              <div className="glass rounded-full px-6 py-3 border border-purple-400/30">
-                <i className="fas fa-brain text-purple-400 mr-2"></i>
-                <span className="text-purple-400 font-semibold">
-                  {t("Deep Multi-Modal Models")}
-                </span>
-              </div>
-              <div className="glass rounded-full px-6 py-3 border border-green-400/30">
-                <i className="fas fa-project-diagram text-green-400 mr-2"></i>
-                <span className="text-green-400 font-semibold">
-                  {t("Modular Architecture")}
-                </span>
-              </div>
-              <div className="glass rounded-full px-6 py-3 border border-orange-400/30">
-                <i className="fas fa-language text-orange-400 mr-2"></i>
-                <span className="text-orange-400 font-semibold">
-                  {t("Semantic Control")}
-                </span>
-              </div>
-              <div className="glass rounded-full px-6 py-3 border border-pink-400/30">
-                <i className="fas fa-shield-alt text-pink-400 mr-2"></i>
-                <span className="text-pink-400 font-semibold">
-                  {t("Zero Network Dependency")}
-                </span>
-              </div>
-            </div>
-
-            {/* كلمة السر للنجاح */}
-            <div className="glass rounded-xl p-4 max-w-2xl mx-auto border border-yellow-400/30">
-              <p className="text-yellow-400 font-bold text-lg mb-2">
-                🔥 {t("كلمة السر للنجاح")}
-              </p>
-              <p className="text-2xl font-bold neon-text text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-600">
-                "حرية بلا حدود مع KnouxAI"
-              </p>
-            </div>
-          </div>
-
-          {/* Main Interface with Tabs */}
-          <Tabs
-            value={activeTab}
-            onValueChange={setActiveTab}
-            className="w-full"
-          >
-            <TabsList className="grid w-full grid-cols-5 glass rounded-2xl p-1">
-              <TabsTrigger
-                value="local_ai"
-                className="data-[state=active]:bg-cyan-400/20 data-[state=active]:text-cyan-400"
-              >
-                <i className="fas fa-robot mr-2"></i>
-                {t("30 أداة AI محلية")}
-              </TabsTrigger>
-              <TabsTrigger
-                value="technical"
-                className="data-[state=active]:bg-orange-400/20 data-[state=active]:text-orange-400"
-              >
-                <i className="fas fa-microchip mr-2"></i>
-                {t("وحدة تحكم ��قنية")}
-              </TabsTrigger>
-              <TabsTrigger
-                value="models"
-                className="data-[state=active]:bg-purple-400/20 data-[state=active]:text-purple-400"
-              >
-                <i className="fas fa-brain mr-2"></i>
-                {t("إدارة النماذج")}
-              </TabsTrigger>
-              <TabsTrigger
-                value="services"
-                className="data-[state=active]:bg-blue-400/20 data-[state=active]:text-blue-400"
-              >
-                <i className="fas fa-cloud mr-2"></i>
-                {t("خدمات السحابة")}
-              </TabsTrigger>
-              <TabsTrigger
-                value="workspace"
-                className="data-[state=active]:bg-green-400/20 data-[state=active]:text-green-400"
-              >
-                <i className="fas fa-magic mr-2"></i>
-                {t("ورشة العمل")}
-              </TabsTrigger>
-            </TabsList>
-
-            {/* Local AI Tools Tab */}
-            <TabsContent value="local_ai" className="mt-8">
-              <Card className="glass-strong rounded-3xl p-2">
-                <MainImageEditor />
-              </Card>
-            </TabsContent>
-
-            {/* Technical Dashboard Tab */}
-            <TabsContent value="technical" className="mt-8">
-              <TechnicalDashboard />
-            </TabsContent>
-
-            {/* AI Models Manager Tab */}
-            <TabsContent value="models" className="mt-8">
-              <Card className="glass-strong rounded-3xl p-2">
-                <ComprehensiveModelManager />
-              </Card>
-            </TabsContent>
-
-            {/* Services Tab */}
-            <TabsContent value="services" className="mt-8">
-              <ServicesLayout
-                selectedService={selectedService}
-                onServiceSelect={setSelectedService}
-                onVIPRequest={() => setShowVIPModal(true)}
-                onCustomizationChange={handleCustomizationChange}
+          <section className="py-20 text-center relative">
+            {/* Floating Live Panel */}
+            <div className="fixed top-24 left-6 z-40 hidden lg:block">
+              <LiveNowPanel
+                tool={currentTool}
+                model={currentModel}
+                privacy="No Censorship"
+                status={liveStatus}
+                onStop={() => {
+                  setLiveStatus("Paused");
+                  console.log("تم إيقاف المهمة");
+                }}
+                onSwitch={() => {
+                  setCurrentTool(
+                    currentTool === "Knoux VERSA"
+                      ? "Face Morph"
+                      : "Knoux VERSA",
+                  );
+                  console.log("تم تبديل الأداة");
+                }}
+                onShowLogs={() => {
+                  alert(
+                    "فتح سجل النشاط...\n\n🧠 AI Inference Engine\n⚡ Processing Speed: 2.3s\n🔒 Privacy: Maximum\n📊 Success Rate: 98.7%",
+                  );
+                }}
               />
-            </TabsContent>
+            </div>
 
-            {/* Workspace Tab */}
-            <TabsContent value="workspace" className="mt-8">
-              <Card
-                className="glass-strong rounded-3xl p-8 mb-12 animate-float"
-                style={{ animationDelay: "0.4s" }}
-              >
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                  {/* Image Upload & Selection */}
-                  <div className="space-y-6">
-                    <h3 className="text-2xl font-bold neon-text text-cyan-400">
-                      {t("Upload & Select Area")}
-                    </h3>
+            <div className="max-w-4xl mx-auto">
+              <h2 className="text-5xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-400 bg-clip-text text-transparent animate-gradient-shift">
+                🧠 {t("30 أداة ذكاء اصطناعي")}
+              </h2>
+              <p className="text-xl text-gray-300 mb-8 leading-relaxed max-w-3xl mx-auto">
+                {t("خصوصية كاملة • بلا رقابة • معالجة محلية متقدمة")}
+              </p>
 
-                    <SimpleImageCanvas
-                      onImageUpload={handleImageUpload}
-                      onSelectionChange={handleSelectionChange}
-                      uploadedImage={uploadedImage}
-                    />
-                  </div>
+              {/* Feature Badges */}
+              <div className="flex flex-wrap justify-center gap-4 mb-12">
+                {[
+                  {
+                    icon: "fa-microchip",
+                    text: "Local Inference Engine",
+                    color: "cyan",
+                  },
+                  {
+                    icon: "fa-brain",
+                    text: "Deep Multi-Modal Models",
+                    color: "purple",
+                  },
+                  {
+                    icon: "fa-project-diagram",
+                    text: "Modular Architecture",
+                    color: "green",
+                  },
+                  {
+                    icon: "fa-shield-alt",
+                    text: "Zero Network Dependency",
+                    color: "pink",
+                  },
+                ].map((badge, index) => (
+                  <Badge
+                    key={index}
+                    className={`glass px-6 py-3 border border-${badge.color}-400/30 hover:border-${badge.color}-400/50 transition-all duration-300`}
+                  >
+                    <i
+                      className={`fas ${badge.icon} text-${badge.color}-400 mr-2`}
+                    ></i>
+                    <span className={`text-${badge.color}-400 font-semibold`}>
+                      {badge.text}
+                    </span>
+                  </Badge>
+                ))}
+              </div>
 
-                  {/* AI Command Center */}
-                  <div className="space-y-6">
-                    <h3 className="text-2xl font-bold neon-text text-purple-400">
-                      {t("AI Command Center")}
-                    </h3>
+              {/* Stats Cards */}
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
+                {[
+                  {
+                    label: "AI Tools",
+                    value: stats.totalTools,
+                    icon: "fa-robot",
+                    color: "cyan",
+                  },
+                  {
+                    label: "Active Users",
+                    value: stats.activeUsers.toLocaleString(),
+                    icon: "fa-users",
+                    color: "green",
+                  },
+                  {
+                    label: "Images Processed",
+                    value: stats.processedImages.toLocaleString(),
+                    icon: "fa-images",
+                    color: "purple",
+                  },
+                  {
+                    label: "Uptime",
+                    value: stats.uptime,
+                    icon: "fa-heartbeat",
+                    color: "pink",
+                  },
+                ].map((stat, index) => (
+                  <Card
+                    key={index}
+                    className={`glass-strong p-4 border border-${stat.color}-400/30 hover:border-${stat.color}-400/50 transition-all duration-300 hover:scale-105`}
+                  >
+                    <div className="text-center">
+                      <i
+                        className={`fas ${stat.icon} text-2xl text-${stat.color}-400 mb-2`}
+                      ></i>
+                      <div
+                        className={`text-xl font-bold text-${stat.color}-400`}
+                      >
+                        {stat.value}
+                      </div>
+                      <div className="text-xs text-gray-400">{stat.label}</div>
+                    </div>
+                  </Card>
+                ))}
+              </div>
 
-                    <PromptNexus
-                      selectedService={selectedService}
-                      onTransform={handleTransform}
-                      disabled={!uploadedImage || isProcessing}
-                    />
-
-                    {/* Current Service Customizations Display */}
-                    {serviceCustomizations[selectedService] &&
-                      Object.keys(serviceCustomizations[selectedService])
-                        .length > 0 && (
-                        <Card className="glass p-4 border-purple-400/30">
-                          <h4 className="text-sm font-semibold text-purple-400 mb-3">
-                            <i className="fas fa-cogs mr-2"></i>
-                            {t("Active Customizations")}
-                          </h4>
-                          <div className="text-xs text-gray-300 space-y-1">
-                            {Object.entries(
-                              serviceCustomizations[selectedService],
-                            ).map(([key, value]) => (
-                              <div key={key} className="flex justify-between">
-                                <span className="capitalize">
-                                  {key.replace("_", " ")}:
-                                </span>
-                                <span className="text-cyan-400">
-                                  {String(value)}
-                                </span>
-                              </div>
-                            ))}
-                          </div>
-                        </Card>
-                      )}
-                  </div>
+              {/* Success Motto */}
+              <Card className="glass-strong max-w-2xl mx-auto p-6 border border-yellow-400/30">
+                <div className="text-center">
+                  <p className="text-yellow-400 font-bold text-lg mb-2">
+                    🔥 {t("كلمة السر للنجاح")}
+                  </p>
+                  <p className="text-2xl font-bold bg-gradient-to-r from-cyan-400 to-purple-600 bg-clip-text text-transparent">
+                    "حرية بلا حدود مع KnouxAI"
+                  </p>
                 </div>
               </Card>
-            </TabsContent>
-          </Tabs>
+            </div>
+          </section>
 
-          {/* Results Section */}
-          {result && (
-            <ResultsComparison
-              originalImage={uploadedImage!}
-              transformedImage={result.transformedImageUrl}
-              onNewTransform={reset}
-            />
-          )}
+          {/* Main Workspace */}
+          <section className="pb-20">
+            <Tabs
+              value={activeTab}
+              onValueChange={setActiveTab}
+              className="w-full"
+            >
+              <TabsList className="grid w-full grid-cols-5 glass-strong rounded-2xl p-2 mb-8 border border-cyan-400/30">
+                {[
+                  {
+                    value: "local_ai",
+                    icon: "fa-robot",
+                    label: "30 أداة AI محلية",
+                    color: "cyan",
+                  },
+                  {
+                    value: "technical",
+                    icon: "fa-microchip",
+                    label: "وحدة تحكم تقنية",
+                    color: "orange",
+                  },
+                  {
+                    value: "models",
+                    icon: "fa-brain",
+                    label: "إدارة النماذج",
+                    color: "purple",
+                  },
+                  {
+                    value: "services",
+                    icon: "fa-cloud",
+                    label: "خدمات السحابة",
+                    color: "blue",
+                  },
+                  {
+                    value: "workspace",
+                    icon: "fa-magic",
+                    label: "ورشة العمل",
+                    color: "green",
+                  },
+                ].map((tab) => (
+                  <TabsTrigger
+                    key={tab.value}
+                    value={tab.value}
+                    className={`data-[state=active]:bg-${tab.color}-400/20 data-[state=active]:text-${tab.color}-400 data-[state=active]:shadow-[0_0_20px_rgba(0,255,239,0.2)] transition-all duration-300`}
+                  >
+                    <i className={`fas ${tab.icon} mr-2`}></i>
+                    <span className="hidden sm:inline">{tab.label}</span>
+                  </TabsTrigger>
+                ))}
+              </TabsList>
 
-          {/* Error Display */}
-          {error && (
-            <Card className="glass rounded-2xl p-6 mb-12 border-red-500/50 error-glow">
-              <div className="text-center text-red-400">
-                <i className="fas fa-exclamation-triangle text-4xl mb-4"></i>
-                <h3 className="text-xl font-bold mb-2">
-                  {t("Transformation Failed")}
-                </h3>
-                <p>{error}</p>
-                <Button
-                  onClick={reset}
-                  className="mt-4 bg-red-500/20 hover:bg-red-500/30 border-red-500/50"
-                >
-                  {t("Try Again")}
-                </Button>
+              {/* Tab Contents */}
+              <div className="min-h-[600px]">
+                <TabsContent value="local_ai" className="mt-0">
+                  <Card className="glass-strong rounded-3xl border border-cyan-400/30 overflow-hidden">
+                    <MainImageEditor />
+                  </Card>
+                </TabsContent>
+
+                <TabsContent value="technical" className="mt-0">
+                  <Card className="glass-strong rounded-3xl p-8 border border-orange-400/30">
+                    <TechnicalDashboard />
+                  </Card>
+                </TabsContent>
+
+                <TabsContent value="models" className="mt-0">
+                  <Card className="glass-strong rounded-3xl p-8 border border-purple-400/30">
+                    <ComprehensiveModelManager />
+                  </Card>
+                </TabsContent>
+
+                <TabsContent value="services" className="mt-0">
+                  <Card className="glass-strong rounded-3xl border border-blue-400/30 overflow-hidden">
+                    <ServicesLayout
+                      selectedService={selectedService}
+                      onServiceChange={setSelectedService}
+                      customizations={serviceCustomizations}
+                      onCustomizationChange={handleCustomizationChange}
+                    />
+                  </Card>
+                </TabsContent>
+
+                <TabsContent value="workspace" className="mt-0">
+                  <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
+                    <div className="xl:col-span-2">
+                      <Card className="glass-strong rounded-2xl p-6 border border-green-400/30">
+                        <SimpleImageCanvas
+                          onImageUpload={handleImageUpload}
+                          onSelectionChange={handleSelectionChange}
+                          uploadedImage={uploadedImage}
+                        />
+                      </Card>
+                    </div>
+                    <div className="space-y-6">
+                      <Card className="glass-strong rounded-2xl p-6 border border-green-400/30">
+                        <PromptNexus
+                          onTransform={handleTransform}
+                          isProcessing={isProcessing || isLocalProcessing}
+                          selectedService={selectedService}
+                          customizations={
+                            serviceCustomizations[selectedService]
+                          }
+                        />
+                      </Card>
+                      {result && (
+                        <Card className="glass-strong rounded-2xl p-6 border border-green-400/30">
+                          <ResultsComparison
+                            transformation={result}
+                            onNewTransform={reset}
+                          />
+                        </Card>
+                      )}
+                    </div>
+                  </div>
+                </TabsContent>
               </div>
-            </Card>
-          )}
+            </Tabs>
+          </section>
         </div>
       </main>
 
-      {/* Footer */}
-      <footer className="glass mt-12 p-6">
-        <div className="container mx-auto text-center">
-          <div style={{ fontSize: "1.1em", color: "#999", marginTop: "24px" }}>
-            <span>{t("Crafted with creativity by")}</span>{" "}
-            <b style={{ color: "#00FFFF" }}>Sadek Elgazar</b> | © 2025 KNOUX
-            VERSA.
-            <br />
-            <span style={{ fontSize: "0.9em", color: "#88f" }}>
-              {t("Support the creator on")}{" "}
-              <a
-                href="https://buymeacoffee.com/knoux"
-                target="_blank"
-                rel="noopener noreferrer"
-                style={{ color: "#a8f" }}
-                className="hover:text-yellow-300 transition-colors"
-              >
-                BuyMeACoffee
-              </a>{" "}
-              ✨
-            </span>
-          </div>
-        </div>
-      </footer>
-
       {/* Modals */}
-      <ProcessingModal
-        isOpen={isProcessing || isLocalProcessing}
-        progress={isLocalProcessing ? localProgress : progress}
-        message={isLocalProcessing ? localMessage : processingMessage}
-      />
+      {(isProcessing || isLocalProcessing) && (
+        <ProcessingModal
+          progress={isLocalProcessing ? localProgress : progress}
+          message={isLocalProcessing ? localMessage : processingMessage}
+          isLocal={isLocalProcessing}
+        />
+      )}
 
-      <VIPModal
-        isOpen={showVIPModal}
-        onClose={() => setShowVIPModal(false)}
-        onVIPAccess={handleVIPAccess}
-      />
+      {showVIPModal && (
+        <VIPModal
+          isOpen={showVIPModal}
+          onClose={() => setShowVIPModal(false)}
+          onVIPAccess={handleVIPAccess}
+        />
+      )}
 
-      {/* KNOUX Control Room */}
-      <KnouxControlRoom
-        isOpen={showControlRoom}
-        onClose={() => setShowControlRoom(false)}
-      />
+      {showControlRoom && (
+        <KnouxControlRoom
+          isOpen={showControlRoom}
+          onClose={() => setShowControlRoom(false)}
+        />
+      )}
     </div>
   );
 }
