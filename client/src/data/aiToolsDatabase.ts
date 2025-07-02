@@ -1,4 +1,4 @@
-import { AiTool, AIModelIdentifier, ToolFeature } from "@/types/aiTools";
+import { AiTool, AIModelIdentifier, ToolFeature } from "@/shared/types";
 
 // Comprehensive database of all 30 AI Tools for KNOUX-VERSA
 export const AI_TOOLS_DATABASE: AiTool[] = [
@@ -932,7 +932,7 @@ export const AI_TOOLS_DATABASE: AiTool[] = [
         description_en: "Automatic pose detection",
       },
       {
-        description_ar: "تحكم في نقاط المفاصل",
+        description_ar: "تح��م في نقاط المفاصل",
         description_en: "Joint point control",
       },
       { description_ar: "وضعيات طبيعية", description_en: "Natural poses" },
@@ -1014,7 +1014,7 @@ export const AI_TOOLS_DATABASE: AiTool[] = [
     id: "hair_stylist",
     name_ar: "مصفف الشعر الذكي",
     name_en: "AI Hair Stylist",
-    description_ar: "تغيير تسريحات الشعر والألوان بأحدث الصيحات",
+    description_ar: "تغيير تسريحات الشعر والألوان بأحدث الصيحا��",
     description_en: "Change hairstyles and colors with the latest trends",
     category: "Face",
     model_info: {
@@ -1440,7 +1440,7 @@ export const AI_TOOLS_DATABASE: AiTool[] = [
     id: "eye_color_changer",
     name_ar: "مغير لون العيون",
     name_en: "Eye Color Changer",
-    description_ar: "تغيير لون العيون بدقة عالية مع الحفاظ على الطبيعية",
+    description_ar: "تغيير لون العيون بدقة عالية مع الحفاظ على ��لطبيعية",
     description_en:
       "Change eye color with high precision while maintaining naturalness",
     category: "Face",
