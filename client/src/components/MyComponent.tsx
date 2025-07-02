@@ -1,21 +1,21 @@
 export default function MyComponent() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900 text-white p-8">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900 text-white p-4 md:p-8">
       {/* Hero Section */}
-      <div className="max-w-6xl mx-auto text-center space-y-8">
+      <div className="max-w-6xl mx-auto text-center space-y-6 md:space-y-8">
         {/* Logo and Title */}
-        <div className="space-y-4">
+        <div className="space-y-4 animate-fade-in-up">
           <div className="flex justify-center">
-            <div className="w-20 h-20 rounded-full bg-gradient-to-r from-cyan-400 to-purple-600 flex items-center justify-center text-3xl font-bold animate-pulse">
+            <div className="w-16 h-16 md:w-20 md:h-20 rounded-full bg-gradient-to-r from-cyan-400 to-purple-600 flex items-center justify-center text-2xl md:text-3xl font-bold animate-spin-slow">
               K
             </div>
           </div>
 
-          <h1 className="text-6xl font-bold bg-gradient-to-r from-cyan-400 to-purple-600 bg-clip-text text-transparent">
+          <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-cyan-400 to-purple-600 bg-clip-text text-transparent">
             KNOUX VERSA
           </h1>
 
-          <h2 className="text-3xl font-semibold text-yellow-400">
+          <h2 className="text-xl md:text-3xl font-semibold text-yellow-400">
             🚀 النظام المحلي الكامل للذكاء الاصطناعي
           </h2>
         </div>
@@ -23,7 +23,7 @@ export default function MyComponent() {
         {/* Description */}
         <p className="text-xl text-gray-300 max-w-4xl mx-auto leading-relaxed">
           30 أداة ذكاء اصطناعي متقدمة تعمل بالكامل على جهازك - بدون إنترنت، بدون
-          رفع بيانات، خصوصية مطلقة
+          رفع بيانات، خصوصية مطل��ة
         </p>
 
         {/* Features Grid */}

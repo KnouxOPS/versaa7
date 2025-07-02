@@ -14,10 +14,11 @@ import {
 
 const app = express();
 
-// Security and performance middleware
+// Security and performance middleware - allow embedding in Builder.io
 app.use(
   helmet({
     contentSecurityPolicy: false, // Disable for development
+    frameguard: false, // Allow embedding in iframes for Builder.io
   }),
 );
 app.use(compression());
@@ -26,8 +27,16 @@ app.use(
     origin:
       process.env.NODE_ENV === "development"
         ? true
-        : ["https://yourdomain.com"],
+        : [
+            "https://yourdomain.com",
+            "https://builder.io",
+            "https://*.builder.io",
+            "https://cdn.builder.io",
+            "https://*.builder.my",
+          ],
     credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
   }),
 );
 
