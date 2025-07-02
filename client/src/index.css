@@ -405,6 +405,15 @@
     animation: gradient-shift 3s ease infinite;
   }
 
+  .animate-gradient-shift {
+    background-size: 200% 200%;
+    animation: gradient-shift 3s ease-in-out infinite;
+  }
+
+  .animate-spin-reverse {
+    animation: spin-slow 4s linear infinite reverse;
+  }
+
   /* Builder.io component specific styles */
   .builder-hero {
     font-family: "Inter", sans-serif;
