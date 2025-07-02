@@ -15,7 +15,10 @@
     "electron:compile": "node scripts/build-electron.js",
     "electron:build": "npm run build && npm run electron:compile && electron-builder",
     "electron:dist": "npm run build && npm run electron:compile && electron-builder --publish=never",
-    "electron:pack": "npm run build && npm run electron:compile && electron-builder --dir"
+    "electron:pack": "npm run build && npm run electron:compile && electron-builder --dir",
+    "build-exe": "node scripts/make-exe.js",
+    "clean-build": "node scripts/make-exe.js --clean-only",
+    "package-win": "npm run build-exe"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
