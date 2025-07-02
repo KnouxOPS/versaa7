@@ -34,10 +34,10 @@ export enum AIModelIdentifier {
 // Model Information embedded in Tool
 export interface ModelInfo {
   name: string; // Public display name of the AI model
-  backend_identifier: AIModelIdentifier; // Internal key for ModelLoader
+  backend_identifier: string; // Internal key for ModelLoader (using string to match shared types)
   size_gb: number; // Size of the model files in Gigabytes
   processing_time_secs: string; // Estimated processing time range in seconds
-  gpu_required: boolean; // Whether GPU is required
+  gpu_required?: boolean; // Whether GPU is required
   min_vram_gb?: number; // Minimum VRAM required
 }
 
