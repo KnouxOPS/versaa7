@@ -19,7 +19,8 @@
     "build-exe": "node scripts/make-exe.js",
     "clean-build": "node scripts/make-exe.js --clean-only",
     "package-win": "npm run build-exe",
-    "test-build": "node scripts/test-build.js"
+    "test-build": "node scripts/test-build.js",
+    "build-final": "node scripts/build-final.js"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
