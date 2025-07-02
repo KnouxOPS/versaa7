@@ -1,4 +1,4 @@
-import { createContext, useState, useEffect, ReactNode } from "react";
+import React, { createContext, useState, useEffect, ReactNode } from "react";
 
 interface LanguageContextType {
   currentLanguage: "en" | "ar";
@@ -426,7 +426,7 @@ const translations = {
     "Upscale and enhance to Ultra HD quality": "كبّر وحسّن لجودة فائقة الوضوح",
     "VIP Magic Morph": "التحويل السحري VIP",
     "Ultra-advanced AI for complex transformations (Owner Only)":
-      "ذكاء اصطناعي فائق للتحولات المعقدة (المالك فقط)",
+      "ذكاء اصطناعي فائق للتحولات المعقدة (الما��ك فقط)",
     "Sadek Elgazar Exclusive": "حصري لصادق الجزار",
 
     // Image Upload
@@ -704,7 +704,7 @@ const translations = {
     "Open Source Transparency": "شفافية مفتوحة المصدر",
     "All application code is open source and auditable. Complete transparency in how data is handled and privacy is protected.":
       "جميع أكواد التطبيق مفتوحة المصدر وقابلة للتدقيق. شفافية كاملة في كيفية التعامل مع البيانات وحماية الخصوصية.",
-    "Unrestricted Freedom": "حرية بلا قيود",
+    "Unrestricted Freedom": "حرية بلا ��يود",
     "No content filtering or censorship. Adult tools available with clear user responsibility warnings. Complete creative freedom.":
       "لا تصفية محتوى أو رقابة. أدوات للبالغين متاحة مع تحذيرات واضحة لمسؤولية المستخدم. حرية إبداعية كاملة.",
     "User Responsibility Notice": "إشعار مسؤولية المستخدم",
@@ -714,7 +714,7 @@ const translations = {
     Backend: "الخلفية",
     Frontend: "الواجهة الأمامية",
     "Performance Optimization": "تحسين الأداء",
-    "GPU Acceleration": "تسريع وحدة الرسومات",
+    "GPU Acceleration": "تسريع وحدة الرس��مات",
     "Full CUDA/ROCm support for NVIDIA and AMD GPUs. Massive performance boost for AI inference.":
       "دعم كامل لـ CUDA/ROCm لوحدات رسومات NVIDIA و AMD. تعزيز أداء هائل لاستنتاج الذكاء الاصطناعي.",
     "Model Optimization": "تحسين النماذج",
