@@ -29,6 +29,8 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { useMutation } from "@tanstack/react-query";
 
 import { processToolRequest } from "@/lib/toolProcessors";
+import { SensitiveContentWarning } from "./SensitiveContentWarning";
+import { AdvancedProcessingModal } from "./AdvancedProcessingModal";
 
 // Local AI processing function using the custom tool processors
 const processToolLocally = async (
@@ -40,6 +42,7 @@ const processToolLocally = async (
 };
 
 import { AdvancedToolSettings } from "./AdvancedToolSettings";
+import { SystemStatsWidget } from "./SystemStatsWidget";
 
 export const MainImageEditor: React.FC = () => {
   // State management
@@ -64,39 +67,82 @@ export const MainImageEditor: React.FC = () => {
   const [processingProgress, setProcessingProgress] = useState(0);
   const [processingMessage, setProcessingMessage] = useState("");
 
+  // Sensitive content warning state
+  const [showSensitiveWarning, setShowSensitiveWarning] = useState(false);
+  const [pendingTool, setPendingTool] = useState<AiTool | null>(null);
+
+  // Advanced processing modal state
+  const [showAdvancedProcessing, setShowAdvancedProcessing] = useState(false);
+
   const processingMutation = useMutation<
     ProcessToolResponse,
     Error,
     { tool: AiTool; payload: ProcessToolRequestPayload }
   >({
     mutationFn: async ({ tool, payload }) => {
+      setShowAdvancedProcessing(true);
       return processToolLocally(tool, payload, (progress, message) => {
         setProcessingProgress(progress);
         setProcessingMessage(message);
       });
     },
     onSuccess: (data) => {
+      setShowAdvancedProcessing(false);
       if (data.success && data.editedImage) {
         setEditedImage(data.editedImage);
-        setProcessingMessage("تمت المعالجة بنجاح!");
+        setProcessingMessage("تمت المعالجة بنجاح! ✨");
       } else if (!data.success) {
         console.error("Processing failed:", data.message);
+        setProcessingMessage("فشلت المعالجة ❌");
       }
     },
     onError: (error) => {
+      setShowAdvancedProcessing(false);
       console.error("Processing error:", error);
-      setProcessingMessage("فشلت المعالجة");
+      setProcessingMessage("فشلت المعالجة ❌");
     },
   });
 
+  const handleCancelProcessing = useCallback(() => {
+    setShowAdvancedProcessing(false);
+    setProcessingProgress(0);
+    setProcessingMessage("");
+    // In a real implementation, this would also cancel the actual processing
+  }, []);
+
   // Handlers
   const handleToolSelect = useCallback((tool: AiTool) => {
+    // Check if tool is sensitive and requires warning
+    if (tool.is_sensitive) {
+      setPendingTool(tool);
+      setShowSensitiveWarning(true);
+      return;
+    }
+
+    // Proceed with tool selection
+    selectTool(tool);
+  }, []);
+
+  const selectTool = useCallback((tool: AiTool) => {
     setSelectedToolId(tool.id);
     setActiveTab("editor");
     setPrompt("");
     setToolSettings({});
     setCurrentMask(null);
     setSecondImage(null);
+    setPendingTool(null);
+    setShowSensitiveWarning(false);
+  }, []);
+
+  const handleSensitiveWarningAccept = useCallback(() => {
+    if (pendingTool) {
+      selectTool(pendingTool);
+    }
+  }, [pendingTool, selectTool]);
+
+  const handleSensitiveWarningCancel = useCallback(() => {
+    setPendingTool(null);
+    setShowSensitiveWarning(false);
   }, []);
 
   const handleImageUpload = useCallback((imageUrl: string) => {
@@ -294,6 +340,8 @@ export const MainImageEditor: React.FC = () => {
               <div className="w-80 border-l border-white/10 bg-black/20">
                 <ScrollArea className="h-full p-6">
                   <div className="space-y-6">
+                    {/* System Stats */}
+                    <SystemStatsWidget />
                     {/* Prompt Input */}
                     {selectedTool.requires_prompt && (
                       <div className="space-y-2">
@@ -466,6 +514,31 @@ export const MainImageEditor: React.FC = () => {
           </div>
         )}
       </div>
+
+      {/* Sensitive Content Warning Modal */}
+      <SensitiveContentWarning
+        tool={pendingTool}
+        isOpen={showSensitiveWarning}
+        onAccept={handleSensitiveWarningAccept}
+        onCancel={handleSensitiveWarningCancel}
+      />
+
+      {/* Advanced Processing Modal */}
+      <AdvancedProcessingModal
+        isOpen={showAdvancedProcessing}
+        tool={selectedTool}
+        progress={processingProgress}
+        message={processingMessage}
+        onCancel={handleCancelProcessing}
+        estimatedTimeSeconds={
+          selectedTool
+            ? parseInt(
+                selectedTool.model_info.processing_time_secs.split("-")[1] ||
+                  "10",
+              )
+            : undefined
+        }
+      />
     </div>
   );
 };

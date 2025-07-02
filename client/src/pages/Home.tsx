@@ -10,6 +10,7 @@ import { ResultsComparison } from "@/components/ResultsComparison";
 import { VIPModal } from "@/components/VIPModal";
 import { TechnicalDashboard } from "@/components/TechnicalDashboard";
 import { AdvancedAIModelsManager } from "@/components/AdvancedAIModelsManager";
+import { ComprehensiveModelManager } from "@/components/ComprehensiveModelManager";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useImageTransform } from "@/hooks/useImageTransform";
 import { processImageLocally } from "@/lib/localAIProcessor";
@@ -350,7 +351,7 @@ export default function Home() {
                 className="data-[state=active]:bg-orange-400/20 data-[state=active]:text-orange-400"
               >
                 <i className="fas fa-microchip mr-2"></i>
-                {t("وحدة تحكم تقنية")}
+                {t("وحدة تحكم ��قنية")}
               </TabsTrigger>
               <TabsTrigger
                 value="models"
@@ -389,7 +390,9 @@ export default function Home() {
 
             {/* AI Models Manager Tab */}
             <TabsContent value="models" className="mt-8">
-              <AdvancedAIModelsManager />
+              <Card className="glass-strong rounded-3xl p-2">
+                <ComprehensiveModelManager />
+              </Card>
             </TabsContent>
 
             {/* Services Tab */}
