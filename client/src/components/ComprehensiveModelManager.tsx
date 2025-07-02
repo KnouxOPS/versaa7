@@ -53,14 +53,27 @@ export const ComprehensiveModelManager: React.FC = () => {
       const status = getModelStatus(modelId);
 
       if (!modelMap.has(modelId)) {
+        // Ensure status is one of the valid values
+        const validStatuses: ModelInfo["status"][] = [
+          "downloaded",
+          "downloading",
+          "not_downloaded",
+          "failed",
+        ];
+        const safeStatus = validStatuses.includes(
+          status.status as ModelInfo["status"],
+        )
+          ? (status.status as ModelInfo["status"])
+          : "not_downloaded";
+
         modelMap.set(modelId, {
           id: modelId,
           name: tool.model_info.name,
           size_gb: tool.model_info.size_gb,
           backend_identifier: modelId,
           tools_using: [tool.getName("en")],
-          status: status.status,
-          progress: status.progress,
+          status: safeStatus,
+          progress: status.progress || 0,
           complexity: tool.processing_complexity || "medium",
           gpu_required: tool.model_info.gpu_required || false,
           min_vram_gb: tool.model_info.min_vram_gb,
