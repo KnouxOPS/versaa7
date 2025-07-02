@@ -252,6 +252,15 @@ export default function Home() {
             <Button
               variant="outline"
               size="sm"
+              onClick={() => setShowControlRoom(true)}
+              className="glass border-orange-400/30 hover:bg-orange-400/10 text-orange-400"
+            >
+              <i className="fas fa-cogs mr-2"></i>
+              {currentLanguage === "en" ? "Control Room" : "غرفة التحكم"}
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
               onClick={toggleLanguage}
               className="glass border-cyan-400/30 hover:bg-cyan-400/10"
             >
