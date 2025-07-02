@@ -107,11 +107,13 @@ export class MockStorage implements IStorage {
 
 export class DatabaseStorage implements IStorage {
   async getUser(id: number): Promise<User | undefined> {
+    if (!db) throw new Error("Database not available");
     const [user] = await db.select().from(users).where(eq(users.id, id));
     return user || undefined;
   }
 
   async getUserByUsername(username: string): Promise<User | undefined> {
+    if (!db) throw new Error("Database not available");
     const [user] = await db
       .select()
       .from(users)
@@ -120,6 +122,7 @@ export class DatabaseStorage implements IStorage {
   }
 
   async createUser(insertUser: InsertUser): Promise<User> {
+    if (!db) throw new Error("Database not available");
     const [user] = await db.insert(users).values(insertUser).returning();
     return user;
   }
@@ -127,6 +130,7 @@ export class DatabaseStorage implements IStorage {
   async createTransformation(
     insertTransformation: InsertTransformation,
   ): Promise<Transformation> {
+    if (!db) throw new Error("Database not available");
     const [transformation] = await db
       .insert(transformations)
       .values(insertTransformation)
@@ -135,6 +139,7 @@ export class DatabaseStorage implements IStorage {
   }
 
   async getTransformation(id: number): Promise<Transformation | undefined> {
+    if (!db) throw new Error("Database not available");
     const [transformation] = await db
       .select()
       .from(transformations)
@@ -143,6 +148,7 @@ export class DatabaseStorage implements IStorage {
   }
 
   async getUserTransformations(userId?: number): Promise<Transformation[]> {
+    if (!db) throw new Error("Database not available");
     if (userId) {
       return await db
         .select()
@@ -155,6 +161,7 @@ export class DatabaseStorage implements IStorage {
   async createVipSession(
     insertVipSession: InsertVipSession,
   ): Promise<VipSession> {
+    if (!db) throw new Error("Database not available");
     const [session] = await db
       .insert(vipSessions)
       .values(insertVipSession)
@@ -163,6 +170,7 @@ export class DatabaseStorage implements IStorage {
   }
 
   async getVipSession(sessionKey: string): Promise<VipSession | undefined> {
+    if (!db) throw new Error("Database not available");
     const [session] = await db
       .select()
       .from(vipSessions)
@@ -171,6 +179,7 @@ export class DatabaseStorage implements IStorage {
   }
 
   async deactivateVipSession(sessionKey: string): Promise<void> {
+    if (!db) throw new Error("Database not available");
     await db
       .update(vipSessions)
       .set({ isActive: false })
@@ -178,4 +187,11 @@ export class DatabaseStorage implements IStorage {
   }
 }
 
-export const storage = new DatabaseStorage();
+// Use mock storage when database is not available, otherwise use real database storage
+export const storage: IStorage = db ? new DatabaseStorage() : new MockStorage();
+
+if (!db) {
+  console.warn(
+    "⚠️  Using mock storage. Data will not persist between server restarts.",
+  );
+}
