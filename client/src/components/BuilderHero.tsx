@@ -176,6 +176,12 @@ export default function BuilderHero({
                 <span className="bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 bg-clip-text text-transparent animate-pulse">
                   {subtitle}
                 </span>
+                {showSecondary && (
+                  <div className="text-2xl lg:text-3xl mt-4 text-yellow-400 min-h-[2.5rem]">
+                    <span className="animate-fade-in-up">✨ {typingText}</span>
+                    <span className="animate-pulse ml-1">|</span>
+                  </div>
+                )}
               </h2>
 
               <p className="text-xl text-gray-300 leading-relaxed max-w-2xl">
