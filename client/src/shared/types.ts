@@ -1,11 +1,33 @@
 // src/shared/types.ts (Shared types for Frontend/Backend communication clarity)
 
+// AI Model Identifiers used internally by ModelLoader
+export enum AIModelIdentifier {
+  DEEPFACELAB_SAEHD = "deepfacelab_saehd",
+  PHI3_VISION = "phi3_vision",
+  STABLE_DIFFUSION_XL = "stable_diffusion_xl",
+  STABLE_DIFFUSION_V21 = "stable_diffusion_v21",
+  SEGMENT_ANYTHING = "segment_anything",
+  REAL_ESRGAN = "real_esrgan",
+  CONTROLNET = "controlnet",
+  MODNET = "modnet",
+  CLIP_SAM = "clip_sam",
+  REALISTIC_VISION = "realistic_vision",
+  ANYTHING_V6 = "anything_v6",
+  PROMPT_TO_MASK = "prompt_to_mask",
+  GFPGAN = "gfpgan",
+  CODEFORMER = "codeformer",
+  REMBG = "rembg",
+  DEPTH_ESTIMATION = "depth_estimation",
+}
+
 // Needs to match ModelInfo Pydantic model structure
 export interface AIModelInfo {
   name: string;
   backend_identifier: string; // Matches AIModelIdentifier values
   size_gb: number;
   processing_time_secs: string;
+  gpu_required?: boolean;
+  min_vram_gb?: number;
 }
 
 // Needs to match ToolFeature Pydantic model structure
@@ -27,8 +49,10 @@ export interface AiTool {
   is_sensitive: boolean;
   requires_mask: boolean;
   requires_prompt: boolean;
-  // input_types: string[]; // e.g., ['image', 'image2']
-  // Add other specific info needed by the frontend UI
+  requires_second_image?: boolean;
+  input_types?: string[]; // e.g., ['image', 'image2']
+  input_schema?: { [key: string]: any };
+  output_schema?: { [key: string]: any };
 
   // Helper methods mirrored (or logic in component/hook)
   getName(lang: "ar" | "en"): string;
