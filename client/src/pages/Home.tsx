@@ -12,6 +12,7 @@ import { TechnicalDashboard } from "@/components/TechnicalDashboard";
 import { AdvancedAIModelsManager } from "@/components/AdvancedAIModelsManager";
 import { ComprehensiveModelManager } from "@/components/ComprehensiveModelManager";
 import { KnouxControlRoom } from "@/components/ControlRoom/KnouxControlRoom";
+import LiveNowPanel from "@/components/LiveNowPanel";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useImageTransform } from "@/hooks/useImageTransform";
 import { processImageLocally } from "@/lib/localAIProcessor";
@@ -149,7 +150,7 @@ export default function Home() {
           throw new Error(result.error || "فشلت المعالجة المحلية");
         }
       } catch (error) {
-        console.error("خطأ في المعالجة المحلية:", error);
+        console.error("خطأ في المعالج�� المحلية:", error);
         setError(
           error instanceof Error ? error.message : "خطأ في المعالجة المحلية",
         );
