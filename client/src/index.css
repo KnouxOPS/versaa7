@@ -337,6 +337,14 @@
     animation: energy-pulse 2s ease-in-out infinite;
   }
 
+  .animate-live-pulse {
+    animation: live-pulse 0.8s ease-in-out infinite;
+  }
+
+  .animate-neon-text {
+    animation: neon-text 2s ease-in-out infinite;
+  }
+
   /* Builder.io specific animations */
   @keyframes spin-slow {
     from {
