@@ -14,330 +14,307 @@ export const LivePreviewPanel: React.FC = () => {
     "desktop" | "tablet" | "mobile"
   >("desktop");
   const [showGrid, setShowGrid] = useState(false);
+  const [time, setTime] = useState(new Date());
 
-  // Get current effective settings (with previews)
-  const effectiveSettings = {
-    ...state.settings,
-    ...state.previewChanges,
-  };
+  // Update time every second
+  useEffect(() => {
+    const timer = setInterval(() => setTime(new Date()), 1000);
+    return () => clearInterval(timer);
+  }, []);
 
-  // Live preview component with current settings applied
-  const PreviewComponent = () => {
-    const neonGlow = getSettingValue(state, "neonGlow");
-    const glassmorphism = getSettingValue(state, "glassmorphism");
-    const animations = getSettingValue(state, "animations");
-    const shadows = getSettingValue(state, "shadows");
+  // Get current effective settings
+  const glowIntensity = getSettingValue(state.settings, "glowIntensity", 100);
+  const glassOpacity = getSettingValue(state.settings, "glassOpacity", 100);
+  const animations = getSettingValue(state.settings, "animations", true);
+  const shadows = getSettingValue(state.settings, "shadows", true);
 
-    return (
-      <div
-        className="relative w-full h-full rounded-lg overflow-hidden transition-all duration-500"
-        style={{
-          background: `linear-gradient(135deg, rgba(15,15,18,${glassmorphism / 100}) 0%, rgba(34,34,39,${glassmorphism / 100}) 50%, rgba(15,15,18,${glassmorphism / 100}) 100%)`,
-          backdropFilter: `blur(${glassmorphism / 5}px)`,
-          boxShadow: shadows
-            ? `0 0 ${neonGlow / 2}px rgba(0,255,255,${neonGlow / 200})`
-            : "none",
-        }}
-      >
-        {/* Header */}
-        <div className="p-4 border-b border-cyan-400/20">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div
-                className="w-8 h-8 rounded-full bg-gradient-to-r from-cyan-400 to-purple-600 p-0.5"
-                style={{
-                  boxShadow: `0 0 ${neonGlow / 4}px rgba(0,255,255,${neonGlow / 100})`,
-                  animation: animations ? "pulse 2s infinite" : "none",
-                }}
-              >
-                <div className="w-full h-full bg-[#0F0F12] rounded-full flex items-center justify-center">
-                  <span className="text-sm font-bold text-cyan-400">K</span>
-                </div>
-              </div>
-              <span className="text-white font-semibold">
-                Preview Interface
-              </span>
-            </div>
-            <Badge className="bg-green-500/20 text-green-400 border-green-400/30">
-              Live
-            </Badge>
-          </div>
-        </div>
-
-        {/* Content Area */}
-        <div className="p-6 space-y-4">
-          {/* Sample Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <Card
-              className="p-4 border-cyan-400/30 transition-all duration-300 hover:border-cyan-400/50"
-              style={{
-                background: `rgba(34,34,39,${glassmorphism / 150})`,
-                backdropFilter: `blur(${glassmorphism / 8}px)`,
-                boxShadow: shadows
-                  ? `0 0 ${neonGlow / 4}px rgba(0,255,255,${neonGlow / 300})`
-                  : "none",
-              }}
-            >
-              <h3 className="text-cyan-400 font-semibold mb-2">Sample Card</h3>
-              <p className="text-gray-300 text-sm">
-                This is how cards look with current settings
-              </p>
-            </Card>
-
-            <Card
-              className="p-4 border-purple-400/30 transition-all duration-300 hover:border-purple-400/50"
-              style={{
-                background: `rgba(34,34,39,${glassmorphism / 150})`,
-                backdropFilter: `blur(${glassmorphism / 8}px)`,
-                boxShadow: shadows
-                  ? `0 0 ${neonGlow / 4}px rgba(139,92,246,${neonGlow / 300})`
-                  : "none",
-              }}
-            >
-              <h3 className="text-purple-400 font-semibold mb-2">
-                Another Card
-              </h3>
-              <p className="text-gray-300 text-sm">
-                Preview different color variants
-              </p>
-            </Card>
-          </div>
-
-          {/* Sample Buttons */}
-          <div className="flex gap-3 flex-wrap">
-            <Button
-              className="bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-600 hover:to-blue-600"
-              style={{
-                boxShadow: `0 0 ${neonGlow / 3}px rgba(0,255,255,${neonGlow / 200})`,
-                animation: animations ? "none" : "none",
-              }}
-            >
-              Primary Action
-            </Button>
-            <Button
-              variant="outline"
-              className="border-cyan-400/30 text-cyan-400 hover:bg-cyan-400/10"
-            >
-              Secondary
-            </Button>
-            <Button
-              variant="outline"
-              className="border-red-400/30 text-red-400 hover:bg-red-400/10"
-            >
-              Danger
-            </Button>
-          </div>
-
-          {/* Sample Toggle */}
-          <div className="flex items-center gap-3">
-            <div
-              className="w-12 h-6 bg-gradient-to-r from-cyan-400 to-blue-500 rounded-full relative cursor-pointer"
-              style={{
-                boxShadow: `0 0 ${neonGlow / 5}px rgba(0,255,255,${neonGlow / 100})`,
-              }}
-            >
-              <div
-                className="absolute right-0.5 top-0.5 w-5 h-5 bg-white rounded-full transition-all duration-300"
-                style={{
-                  boxShadow: shadows ? "0 2px 4px rgba(0,0,0,0.2)" : "none",
-                }}
-              ></div>
-            </div>
-            <span className="text-white text-sm">Sample Toggle (ON)</span>
-          </div>
-
-          {/* Sample Slider */}
-          <div className="space-y-2">
-            <span className="text-white text-sm">Sample Slider</span>
-            <div className="h-3 bg-gray-700 rounded-full relative overflow-hidden">
-              <div
-                className="h-full bg-gradient-to-r from-cyan-400 to-blue-500 rounded-full"
-                style={{
-                  width: `${neonGlow}%`,
-                  boxShadow: `0 0 ${neonGlow / 8}px rgba(0,255,255,${neonGlow / 200})`,
-                }}
-              ></div>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
+  const deviceSizes = {
+    desktop: { width: "100%", height: "100%" },
+    tablet: { width: "768px", height: "1024px" },
+    mobile: { width: "375px", height: "667px" },
   };
 
   return (
-    <div className="h-full flex flex-col p-6">
-      {/* Header */}
-      <div className="mb-6">
-        <div className="flex justify-between items-center mb-4">
-          <div>
-            <h2 className="text-2xl font-bold text-white">
+    <div className="h-full flex">
+      {/* Control Panel */}
+      <div className="w-80 border-r border-gray-700/50 bg-gradient-to-b from-gray-900/50 to-gray-800/50">
+        <div className="p-6">
+          {/* Header */}
+          <div className="mb-6">
+            <h2 className="text-xl font-bold text-white mb-2">
               {lang === "ar" ? "المعاينة المباشرة" : "Live Preview"}
             </h2>
-            <p className="text-gray-400">
+            <p className="text-gray-400 text-sm">
               {lang === "ar"
-                ? "شاهد التغييرات مباشرة على الواجهة"
+                ? "شاهد التغييرات على الواجهة في الوقت الفعلي"
                 : "See changes applied to the interface in real-time"}
             </p>
           </div>
 
-          {/* Preview Controls */}
-          <div className="flex items-center gap-2">
-            {/* Device Size Toggle */}
-            <div className="flex border border-cyan-400/30 rounded-lg overflow-hidden">
-              {["desktop", "tablet", "mobile"].map((mode) => (
-                <button
-                  key={mode}
-                  onClick={() => setPreviewMode(mode as any)}
-                  className={`px-3 py-1 text-sm transition-colors ${
-                    previewMode === mode
-                      ? "bg-cyan-400/20 text-cyan-400"
-                      : "text-gray-400 hover:text-white"
+          {/* Device Size Selector */}
+          <div className="mb-6">
+            <h3 className="text-sm font-semibold text-white mb-3">
+              {lang === "ar" ? "حجم الجهاز" : "Device Size"}
+            </h3>
+            <div className="grid grid-cols-3 gap-2">
+              {(["desktop", "tablet", "mobile"] as const).map((size) => (
+                <Button
+                  key={size}
+                  onClick={() => setPreviewMode(size)}
+                  variant={previewMode === size ? "default" : "outline"}
+                  size="sm"
+                  className={`text-xs ${
+                    previewMode === size
+                      ? "bg-cyan-500 hover:bg-cyan-600"
+                      : "border-gray-600 hover:bg-gray-700"
                   }`}
                 >
                   <i
-                    className={`fas ${
-                      mode === "desktop"
-                        ? "fa-desktop"
-                        : mode === "tablet"
-                          ? "fa-tablet-alt"
-                          : "fa-mobile-alt"
-                    } mr-1`}
+                    className={`fas ${size === "desktop" ? "fa-desktop" : size === "tablet" ? "fa-tablet-alt" : "fa-mobile-alt"} mr-1`}
                   ></i>
-                  {mode === "desktop"
-                    ? lang === "ar"
-                      ? "سطح المكتب"
-                      : "Desktop"
-                    : mode === "tablet"
-                      ? lang === "ar"
-                        ? "تابلت"
-                        : "Tablet"
-                      : lang === "ar"
-                        ? "موبايل"
-                        : "Mobile"}
-                </button>
+                  {size.charAt(0).toUpperCase() + size.slice(1)}
+                </Button>
               ))}
             </div>
+          </div>
 
-            {/* Grid Toggle */}
+          {/* Grid Toggle */}
+          <div className="mb-6">
             <Button
               onClick={() => setShowGrid(!showGrid)}
-              size="sm"
               variant="outline"
-              className="border-purple-400/30 text-purple-400 hover:bg-purple-400/10"
+              size="sm"
+              className={`w-full ${showGrid ? "bg-blue-500/20 border-blue-400/50" : "border-gray-600"}`}
             >
-              <i className="fas fa-th mr-1"></i>
-              {lang === "ar" ? "الشبكة" : "Grid"}
+              <i className="fas fa-th mr-2"></i>
+              {showGrid ? "Hide Grid" : "Show Grid"}
             </Button>
           </div>
-        </div>
 
-        {/* Settings Summary */}
-        <div className="flex flex-wrap gap-2">
-          <Badge className="bg-cyan-500/20 text-cyan-400 border-cyan-400/30">
-            {lang === "ar" ? "توهج" : "Glow"}:{" "}
-            {getSettingValue(state, "neonGlow")}%
-          </Badge>
-          <Badge className="bg-purple-500/20 text-purple-400 border-purple-400/30">
-            {lang === "ar" ? "زجاجي" : "Glass"}:{" "}
-            {getSettingValue(state, "glassmorphism")}%
-          </Badge>
-          <Badge
-            className={`${getSettingValue(state, "animations") ? "bg-green-500/20 text-green-400 border-green-400/30" : "bg-gray-500/20 text-gray-400 border-gray-400/30"}`}
-          >
-            {lang === "ar" ? "حركات" : "Animations"}:{" "}
-            {getSettingValue(state, "animations")
-              ? lang === "ar"
-                ? "مفعل"
-                : "ON"
-              : lang === "ar"
-                ? "معطل"
-                : "OFF"}
-          </Badge>
-          <Badge
-            className={`${getSettingValue(state, "shadows") ? "bg-blue-500/20 text-blue-400 border-blue-400/30" : "bg-gray-500/20 text-gray-400 border-gray-400/30"}`}
-          >
-            {lang === "ar" ? "ظلال" : "Shadows"}:{" "}
-            {getSettingValue(state, "shadows")
-              ? lang === "ar"
-                ? "مفعل"
-                : "ON"
-              : lang === "ar"
-                ? "معطل"
-                : "OFF"}
-          </Badge>
-          {Object.keys(state.previewChanges).length > 0 && (
-            <Badge className="bg-yellow-500/20 text-yellow-400 border-yellow-400/30 animate-pulse">
-              {Object.keys(state.previewChanges).length}{" "}
-              {lang === "ar" ? "تغيير معلق" : "Pending Changes"}
-            </Badge>
-          )}
-        </div>
-      </div>
+          {/* Live Settings Display */}
+          <div className="space-y-4">
+            <h3 className="text-sm font-semibold text-white">
+              {lang === "ar" ? "الإعدادات الحالية" : "Current Settings"}
+            </h3>
 
-      {/* Preview Container */}
-      <div className="flex-1 relative">
-        {/* Grid Overlay */}
-        {showGrid && (
-          <div className="absolute inset-0 z-10 pointer-events-none">
-            <div
-              className="w-full h-full"
-              style={{
-                backgroundImage: `
-                linear-gradient(rgba(0,255,255,0.1) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(0,255,255,0.1) 1px, transparent 1px)
-              `,
-                backgroundSize: "20px 20px",
-              }}
-            ></div>
-          </div>
-        )}
+            <div className="glass-strong p-4 rounded-lg space-y-3">
+              <div className="flex justify-between text-xs">
+                <span className="text-gray-400">Glow:</span>
+                <span className="text-cyan-400">{glowIntensity}%</span>
+              </div>
+              <div className="flex justify-between text-xs">
+                <span className="text-gray-400">Glass:</span>
+                <span className="text-purple-400">{glassOpacity}%</span>
+              </div>
+              <div className="flex justify-between text-xs">
+                <span className="text-gray-400">Animations:</span>
+                <span
+                  className={animations ? "text-green-400" : "text-red-400"}
+                >
+                  {animations ? "ON" : "OFF"}
+                </span>
+              </div>
+              <div className="flex justify-between text-xs">
+                <span className="text-gray-400">Shadows:</span>
+                <span className={shadows ? "text-green-400" : "text-red-400"}>
+                  {shadows ? "ON" : "OFF"}
+                </span>
+              </div>
+            </div>
 
-        {/* Preview Frame */}
-        <div className="h-full flex items-center justify-center p-4">
-          <div
-            className={`bg-black border-2 border-gray-700 rounded-lg transition-all duration-500 ${
-              previewMode === "desktop"
-                ? "w-full h-full"
-                : previewMode === "tablet"
-                  ? "w-3/4 h-5/6"
-                  : "w-80 h-96"
-            }`}
-            style={{
-              maxWidth:
-                previewMode === "desktop"
-                  ? "100%"
-                  : previewMode === "tablet"
-                    ? "768px"
-                    : "375px",
-              aspectRatio: previewMode === "mobile" ? "9/16" : "auto",
-            }}
-          >
-            <PreviewComponent />
-          </div>
-        </div>
-
-        {/* Preview Info */}
-        <div className="absolute bottom-4 left-4 right-4">
-          <Card className="glass-light p-3">
-            <div className="flex justify-between items-center text-sm">
-              <div className="text-gray-400">
-                {lang === "ar" ? "دقة المعاينة" : "Preview Resolution"}:
-                <span className="text-white ml-1">
+            {/* Preview Info */}
+            <div className="glass-strong p-4 rounded-lg space-y-2">
+              <div className="flex justify-between text-xs">
+                <span className="text-gray-400">Resolution:</span>
+                <span className="text-white">
                   {previewMode === "desktop"
                     ? "1920×1080"
                     : previewMode === "tablet"
-                      ? "1024×768"
+                      ? "768×1024"
                       : "375×667"}
                 </span>
               </div>
-              <div className="text-gray-400">
-                {lang === "ar" ? "آخر تحديث" : "Last Updated"}:
-                <span className="text-cyan-400 ml-1">
-                  {new Date().toLocaleTimeString()}
-                </span>
+              <div className="flex justify-between text-xs">
+                <span className="text-gray-400">Last Updated:</span>
+                <span className="text-white">{time.toLocaleTimeString()}</span>
               </div>
             </div>
-          </Card>
+          </div>
+        </div>
+      </div>
+
+      {/* Preview Area */}
+      <div className="flex-1 p-6 bg-gradient-to-br from-gray-900/30 to-gray-800/30">
+        <div className="h-full flex items-center justify-center">
+          <div
+            className="relative transition-all duration-500 rounded-lg overflow-hidden"
+            style={{
+              width: deviceSizes[previewMode].width,
+              height: deviceSizes[previewMode].height,
+              maxWidth: "100%",
+              maxHeight: "100%",
+              transform: previewMode !== "desktop" ? "scale(0.8)" : "scale(1)",
+            }}
+          >
+            {/* Grid Overlay */}
+            {showGrid && (
+              <div className="absolute inset-0 pointer-events-none z-10">
+                <div
+                  className="w-full h-full opacity-20"
+                  style={{
+                    backgroundImage: `
+                    linear-gradient(rgba(0,255,255,0.3) 1px, transparent 1px),
+                    linear-gradient(90deg, rgba(0,255,255,0.3) 1px, transparent 1px)
+                  `,
+                    backgroundSize: "20px 20px",
+                  }}
+                ></div>
+              </div>
+            )}
+
+            {/* Preview Content */}
+            <div
+              className="w-full h-full"
+              style={{
+                background: `linear-gradient(135deg, rgba(15,15,18,${glassOpacity / 100}) 0%, rgba(34,34,39,${glassOpacity / 100}) 50%, rgba(15,15,18,${glassOpacity / 100}) 100%)`,
+                backdropFilter: `blur(${glassOpacity / 8}px)`,
+                boxShadow: shadows
+                  ? `0 0 ${glowIntensity / 2}px rgba(0,255,255,${glowIntensity / 200})`
+                  : "none",
+              }}
+            >
+              {/* Header */}
+              <div className="p-4 border-b border-cyan-400/20">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div
+                      className="w-8 h-8 rounded-full bg-gradient-to-r from-cyan-400 to-purple-600 p-0.5"
+                      style={{
+                        boxShadow: `0 0 ${glowIntensity / 4}px rgba(0,255,255,${glowIntensity / 100})`,
+                        animation: animations ? "pulse 2s infinite" : "none",
+                      }}
+                    >
+                      <div className="w-full h-full bg-[#0F0F12] rounded-full flex items-center justify-center">
+                        <span className="text-sm font-bold text-cyan-400">
+                          K
+                        </span>
+                      </div>
+                    </div>
+                    <span className="text-white font-semibold">
+                      Preview Interface
+                    </span>
+                  </div>
+                  <Badge className="bg-green-500/20 text-green-400 border-green-400/30 animate-pulse">
+                    Live
+                  </Badge>
+                </div>
+              </div>
+
+              {/* Content */}
+              <div className="p-6 space-y-4">
+                {/* Sample Cards */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <Card
+                    className="p-4 border-cyan-400/30 transition-all duration-300 hover:border-cyan-400/50"
+                    style={{
+                      background: `rgba(34,34,39,${glassOpacity / 150})`,
+                      backdropFilter: `blur(${glassOpacity / 10}px)`,
+                      boxShadow: shadows
+                        ? `0 0 ${glowIntensity / 4}px rgba(0,255,255,${glowIntensity / 300})`
+                        : "none",
+                    }}
+                  >
+                    <h3 className="text-cyan-400 font-semibold mb-2">
+                      Sample Card
+                    </h3>
+                    <p className="text-gray-300 text-sm">
+                      This is how cards look with current settings
+                    </p>
+                  </Card>
+
+                  <Card
+                    className="p-4 border-purple-400/30 transition-all duration-300 hover:border-purple-400/50"
+                    style={{
+                      background: `rgba(34,34,39,${glassOpacity / 150})`,
+                      backdropFilter: `blur(${glassOpacity / 10}px)`,
+                      boxShadow: shadows
+                        ? `0 0 ${glowIntensity / 4}px rgba(139,92,246,${glowIntensity / 300})`
+                        : "none",
+                    }}
+                  >
+                    <h3 className="text-purple-400 font-semibold mb-2">
+                      Another Card
+                    </h3>
+                    <p className="text-gray-300 text-sm">
+                      Preview different color variants
+                    </p>
+                  </Card>
+                </div>
+
+                {/* Sample Buttons */}
+                <div className="flex flex-wrap gap-3">
+                  <Button
+                    className="bg-cyan-500 hover:bg-cyan-600"
+                    style={{
+                      boxShadow: shadows
+                        ? `0 0 ${glowIntensity / 6}px rgba(0,255,255,${glowIntensity / 200})`
+                        : "none",
+                    }}
+                  >
+                    Primary Action
+                  </Button>
+                  <Button
+                    variant="outline"
+                    className="border-gray-600 hover:bg-gray-700"
+                  >
+                    Secondary
+                  </Button>
+                  <Button
+                    variant="destructive"
+                    style={{
+                      boxShadow: shadows
+                        ? `0 0 ${glowIntensity / 6}px rgba(239,68,68,${glowIntensity / 200})`
+                        : "none",
+                    }}
+                  >
+                    Danger
+                  </Button>
+                </div>
+
+                {/* Sample Toggle */}
+                <div
+                  className="flex items-center justify-between p-3 rounded-lg"
+                  style={{
+                    background: `rgba(34,34,39,${glassOpacity / 200})`,
+                  }}
+                >
+                  <span className="text-gray-300">Sample Toggle (ON)</span>
+                  <div
+                    className="w-12 h-6 bg-cyan-500 rounded-full relative"
+                    style={{
+                      boxShadow: `0 0 ${glowIntensity / 8}px rgba(0,255,255,${glowIntensity / 100})`,
+                    }}
+                  >
+                    <div className="w-5 h-5 bg-white rounded-full absolute top-0.5 right-0.5"></div>
+                  </div>
+                </div>
+
+                {/* Sample Slider */}
+                <div className="space-y-2">
+                  <span className="text-gray-300">Sample Slider</span>
+                  <div className="w-full h-2 bg-gray-700 rounded-full relative">
+                    <div
+                      className="h-2 bg-gradient-to-r from-cyan-400 to-purple-500 rounded-full"
+                      style={{
+                        width: `${glowIntensity}%`,
+                        boxShadow: `0 0 ${glowIntensity / 10}px rgba(0,255,255,${glowIntensity / 150})`,
+                      }}
+                    ></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
