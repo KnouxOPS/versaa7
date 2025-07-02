@@ -34,6 +34,7 @@ export default function Home() {
   const [isLocalProcessing, setIsLocalProcessing] = useState(false);
   const [localProgress, setLocalProgress] = useState(0);
   const [localMessage, setLocalMessage] = useState("");
+  const [showControlRoom, setShowControlRoom] = useState(false);
 
   const {
     transform,
@@ -137,7 +138,7 @@ export default function Home() {
             metadata: result.metadata,
           };
 
-          // عرض ��لنتيجة
+          // عرض النتيجة
           setResult(mockTransformation);
           setLocalMessage("تمت المعالجة بنجاح! ✨");
 
