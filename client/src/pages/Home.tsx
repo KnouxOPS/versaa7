@@ -3,6 +3,7 @@ import { NeuralBackground } from "@/components/NeuralBackground";
 import { SimpleImageCanvas } from "@/components/SimpleImageCanvas";
 import { ServicesLayout } from "@/components/ServicesLayout";
 import { AdvancedLocalAITools } from "@/components/AdvancedLocalAITools";
+import { MainImageEditor } from "@/components/MainImageEditor";
 import { PromptNexus } from "@/components/PromptNexus";
 import { ProcessingModal } from "@/components/ProcessingModal";
 import { ResultsComparison } from "@/components/ResultsComparison";
@@ -376,13 +377,9 @@ export default function Home() {
 
             {/* Local AI Tools Tab */}
             <TabsContent value="local_ai" className="mt-8">
-              <AdvancedLocalAITools
-                selectedTool={selectedService}
-                onToolSelect={(tool) => {
-                  setSelectedService(tool.id);
-                  setActiveTab("workspace");
-                }}
-              />
+              <Card className="glass-strong rounded-3xl p-2">
+                <MainImageEditor />
+              </Card>
             </TabsContent>
 
             {/* Technical Dashboard Tab */}
