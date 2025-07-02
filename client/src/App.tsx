@@ -16,7 +16,8 @@ function Router() {
     <Switch>
       <Route path="/" component={Home} />
       <Route path="/about" component={About} />
-      <Route path="/builder" component={MyComponent} />
+      <Route path="/builder" component={Builder} />
+      <Route path="/component" component={MyComponent} />
       <Route path="/hero" component={BuilderHero} />
       <Route component={NotFound} />
     </Switch>
