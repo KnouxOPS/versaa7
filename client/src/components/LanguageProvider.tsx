@@ -522,7 +522,7 @@ const translations = {
     "is an advanced AI platform that automatically edits your images with text commands, without limits or restrictions — 'Select, Write, Be Amazed!'":
       "منصة ذكاء صناعي متقدمة تعدّل صورك أوتوماتيكياً بأوامر نصية، بدون حدود أو قيود — 'ظلّل، اكتب، انبهر!'",
     "It uses the latest AI technologies (Image Generation/Transformation), and a futuristic luxury user interface that supports Arabic and English.":
-      "يستخدم أحدث تقنيات الذكاء الاصطناعي (توليد/تحويل الصور)، وواجهة مستخدم مستقبلية فاخرة تدعم العربية والإنجليزية.",
+      "يس��خدم أحدث تقنيات الذكاء الاصطناعي (توليد/تحويل الصور)، وواجهة مستخدم مستقبلية فاخرة تدعم العربية والإنجليزية.",
     "Why KNOUX VERSA?": "لماذا KNOUX VERSA؟",
     "Fastest & Strongest": "الأسرع والأقوى",
     "Edit images in moments without needing Photoshop or Adobe expertise.":
@@ -599,7 +599,8 @@ const translations = {
     "Object Recoloring": "إعادة تلوين العناصر",
     "Change colors of any object seamlessly": "تغيير ألوان أي عنصر بسلاسة",
     "Text to Object": "نص إلى عنصر",
-    "Add new objects using text descriptions": "إضافة عناصر جديدة بالوصف النصي",
+    "Add new objects using text descriptions":
+      "إضافة ع��اصر جديدة بالوصف النصي",
     Cartoonize: "تحويل كرتوني",
     "Convert realistic photos to cartoon style":
       "تحويل الصور الواقعية إلى أسلوب كرتوني",
@@ -689,7 +690,7 @@ const translations = {
     "Sequential AI commands with unlimited complexity - exclusive to Sadek Elgazar":
       "أوامر ذكاء اصطناعي متسلسلة بتعقيد لامحدود - حصرية لصادق الجزار",
     "Access to all uncensored AI transformations with full creative freedom":
-      "وصول لجميع تحويلات الذكاء الاصطناعي بلا قيود مع حرية إبداعية كاملة",
+      "وصول لجميع تحويلات الذكاء الاصطناعي بلا قيود مع حرية إبد��عية كاملة",
     "Integrated AI Models": "نماذج الذكاء الاصطناعي المدمجة",
     "We integrate only the most powerful open-source AI models, all running locally on your device":
       "ندمج فقط أقوى نماذج الذكاء الاصطناعي مفتوحة المصدر، جميعها تعمل محلياً على جهازك",
@@ -708,7 +709,7 @@ const translations = {
       "لا تصفية محتوى أو رقابة. أدوات للبالغين متاحة مع تحذيرات واضحة لمسؤولية المستخدم. حرية إبداعية كاملة.",
     "User Responsibility Notice": "إشعار مسؤولية المستخدم",
     "While we provide powerful uncensored tools, users bear complete responsibility for their usage. We include clear warnings for sensitive tools and remind users that using content for illegal or harmful purposes is their personal responsibility alone.":
-      "بينما نوفر أدوات قوية بلا قيود، يتحمل ال��ستخدمون المسؤولية الكاملة عن استخدامها. نتضمن تحذيرات واضحة للأدوات الحساسة ونذكر المستخدمين أن استخدام المحتوى لأغراض غير قانونية أو ضارة هو مسؤوليتهم الشخصية وحدهم.",
+      "بينما نوفر أد��ات قوية بلا قيود، يتحمل ال��ستخدمون المسؤولية الكاملة عن استخدامها. نتضمن تحذيرات واضحة للأدوات الحساسة ونذكر المستخدمين أن استخدام المحتوى لأغراض غير قانونية أو ضارة هو مسؤوليتهم الشخصية وحدهم.",
     "Technical Architecture": "البنية التقنية",
     Backend: "الخلفية",
     Frontend: "الواجهة الأمامية",
@@ -736,7 +737,7 @@ const translations = {
     "Where imagination meets artificial intelligence.":
       "حيث يلتقي الخيال بالذكاء الاصطناعي.",
     Capabilities: "القدرات",
-    "Local Integration": "التكامل المحلي",
+    "Local Integration": "التكامل الم��لي",
     Working: "يعمل",
     "8 Working AI Tools • Complete Privacy • No Censorship • Fully Local Processing":
       "8 أدوات ذكاء اصطناعي تعمل • خصوصية كاملة • بلا رقابة • معالجة محلية كاملة",
@@ -757,7 +758,9 @@ const translations = {
     "No area selected - AI will process the entire image":
       "لم يتم تحديد منطقة - سيعالج الذكاء الاصطناعي الصورة كاملة",
     "Failed to load image. Please try again.":
-      "فشل تحميل الصورة. ي��جى المحاولة مرة أخرى.",
+      "فشل تحميل الصورة. يرجى المحاولة مرة أخرى.",
+    "30 أداة ذكاء اصطناعي محلية • خصوصية كاملة • بلا رقابة":
+      "30 أداة ذكاء اصطناعي محلية • خصوصية كاملة • بلا رقابة",
   },
 };
 
