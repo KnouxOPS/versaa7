@@ -7,6 +7,8 @@ import { PromptNexus } from "@/components/PromptNexus";
 import { ProcessingModal } from "@/components/ProcessingModal";
 import { ResultsComparison } from "@/components/ResultsComparison";
 import { VIPModal } from "@/components/VIPModal";
+import { TechnicalDashboard } from "@/components/TechnicalDashboard";
+import { AIModelsManager } from "@/components/AIModelsManager";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useImageTransform } from "@/hooks/useImageTransform";
 import { processImageLocally } from "@/lib/localAIProcessor";
@@ -272,38 +274,47 @@ export default function Home() {
           {/* Hero Section */}
           <div className="text-center mb-12">
             <h2 className="text-responsive-xl font-bold mb-4 neon-text text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-600 animate-float">
-              🚀 {t("النظام المحلي الكامل للذكاء الاصطناعي")}
-            </h2>
-            <p className="text-responsive-md text-gray-300 max-w-4xl mx-auto mb-6">
+              🧠{" "}
               {t(
-                "30 أداة ذكاء اصطناعي متقدمة تعمل بالكامل على جهازك - بدون إنترنت، بدون رفع بيانات، خصوصية مطلقة",
+                "Knoux-VERSA | نظام متقدم لتحرير الصور المعتمد على الذكاء الاصطناعي",
+              )}
+            </h2>
+            <p className="text-responsive-md text-gray-300 max-w-6xl mx-auto mb-6 leading-relaxed">
+              {t(
+                "بنية برمجية شاملة موجهة لمعالجة الصور باستخدام تقنيات الذكاء الاصطناعي التوليدي عبر نماذج عميقة متعددة الوسائط. صُمّم ليشكل بيئة معيارية ذات استقلالية تشغيلية عالية، ويتيح تحكمًا دلاليًا مرنًا في مكونات الصورة",
               )}
             </p>
 
             {/* شارات المميزات */}
             <div className="flex flex-wrap justify-center gap-4 mb-8">
               <div className="glass rounded-full px-6 py-3 border border-cyan-400/30">
-                <i className="fas fa-shield-alt text-cyan-400 mr-2"></i>
+                <i className="fas fa-microchip text-cyan-400 mr-2"></i>
                 <span className="text-cyan-400 font-semibold">
-                  {t("100% محلي وآمن")}
+                  {t("Local Inference Engine")}
                 </span>
               </div>
               <div className="glass rounded-full px-6 py-3 border border-purple-400/30">
-                <i className="fas fa-infinity text-purple-400 mr-2"></i>
+                <i className="fas fa-brain text-purple-400 mr-2"></i>
                 <span className="text-purple-400 font-semibold">
-                  {t("حرية بلا حدود")}
+                  {t("Deep Multi-Modal Models")}
                 </span>
               </div>
               <div className="glass rounded-full px-6 py-3 border border-green-400/30">
-                <i className="fas fa-bolt text-green-400 mr-2"></i>
+                <i className="fas fa-project-diagram text-green-400 mr-2"></i>
                 <span className="text-green-400 font-semibold">
-                  {t("معالجة فورية")}
+                  {t("Modular Architecture")}
                 </span>
               </div>
               <div className="glass rounded-full px-6 py-3 border border-orange-400/30">
-                <i className="fas fa-code text-orange-400 mr-2"></i>
+                <i className="fas fa-language text-orange-400 mr-2"></i>
                 <span className="text-orange-400 font-semibold">
-                  {t("مفتوح المصدر")}
+                  {t("Semantic Control")}
+                </span>
+              </div>
+              <div className="glass rounded-full px-6 py-3 border border-pink-400/30">
+                <i className="fas fa-shield-alt text-pink-400 mr-2"></i>
+                <span className="text-pink-400 font-semibold">
+                  {t("Zero Network Dependency")}
                 </span>
               </div>
             </div>
@@ -325,7 +336,7 @@ export default function Home() {
             onValueChange={setActiveTab}
             className="w-full"
           >
-            <TabsList className="grid w-full grid-cols-3 glass rounded-2xl p-1">
+            <TabsList className="grid w-full grid-cols-5 glass rounded-2xl p-1">
               <TabsTrigger
                 value="local_ai"
                 className="data-[state=active]:bg-cyan-400/20 data-[state=active]:text-cyan-400"
@@ -334,8 +345,22 @@ export default function Home() {
                 {t("30 أداة AI محلية")}
               </TabsTrigger>
               <TabsTrigger
-                value="services"
+                value="technical"
+                className="data-[state=active]:bg-orange-400/20 data-[state=active]:text-orange-400"
+              >
+                <i className="fas fa-microchip mr-2"></i>
+                {t("وحدة تحكم تقنية")}
+              </TabsTrigger>
+              <TabsTrigger
+                value="models"
                 className="data-[state=active]:bg-purple-400/20 data-[state=active]:text-purple-400"
+              >
+                <i className="fas fa-brain mr-2"></i>
+                {t("إدارة النماذج")}
+              </TabsTrigger>
+              <TabsTrigger
+                value="services"
+                className="data-[state=active]:bg-blue-400/20 data-[state=active]:text-blue-400"
               >
                 <i className="fas fa-cloud mr-2"></i>
                 {t("خدمات السحابة")}
@@ -349,16 +374,6 @@ export default function Home() {
               </TabsTrigger>
             </TabsList>
 
-            {/* Services Tab */}
-            <TabsContent value="services" className="mt-8">
-              <ServicesLayout
-                selectedService={selectedService}
-                onServiceSelect={setSelectedService}
-                onVIPRequest={() => setShowVIPModal(true)}
-                onCustomizationChange={handleCustomizationChange}
-              />
-            </TabsContent>
-
             {/* Local AI Tools Tab */}
             <TabsContent value="local_ai" className="mt-8">
               <LocalAITools
@@ -367,6 +382,26 @@ export default function Home() {
                   setSelectedService(tool.id);
                   setActiveTab("workspace");
                 }}
+              />
+            </TabsContent>
+
+            {/* Technical Dashboard Tab */}
+            <TabsContent value="technical" className="mt-8">
+              <TechnicalDashboard />
+            </TabsContent>
+
+            {/* AI Models Manager Tab */}
+            <TabsContent value="models" className="mt-8">
+              <AIModelsManager />
+            </TabsContent>
+
+            {/* Services Tab */}
+            <TabsContent value="services" className="mt-8">
+              <ServicesLayout
+                selectedService={selectedService}
+                onServiceSelect={setSelectedService}
+                onVIPRequest={() => setShowVIPModal(true)}
+                onCustomizationChange={handleCustomizationChange}
               />
             </TabsContent>
 
