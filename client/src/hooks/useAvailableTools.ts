@@ -1,20 +1,13 @@
 import { useQuery } from "@tanstack/react-query";
-import { GetToolsListResponse, AiTool } from "@/shared/types";
-import {
-  COMPREHENSIVE_AI_TOOLS,
-  TOOL_CATEGORIES,
-} from "@/data/comprehensiveToolsDatabase";
+import { AiTool, GetToolsListResponse } from "@/shared/types";
+import { AI_TOOLS_DATABASE, ToolsDatabase } from "@/data/aiToolsDatabase";
 
-// Simulate fetching tools from backend or use local comprehensive database
-const fetchToolsList = async (): Promise<GetToolsListResponse> => {
-  // For now, use local comprehensive database
-  // In production, this would fetch from backend /get_tools_list endpoint
+// Simulated API call for local tools (will be replaced with actual local processing)
+const fetchLocalToolsList = async (): Promise<GetToolsListResponse> => {
+  // Simulate API delay for consistency
+  await new Promise((resolve) => setTimeout(resolve, 100));
 
-  // Simulate network delay
-  await new Promise((resolve) => setTimeout(resolve, 500));
-
-  // Add helper methods to tools
-  const toolsWithMethods = COMPREHENSIVE_AI_TOOLS.map((tool) => ({
+  const tools = AI_TOOLS_DATABASE.map((tool) => ({
     ...tool,
     getName: (lang: "ar" | "en") =>
       lang === "ar" ? tool.name_ar : tool.name_en,
@@ -26,31 +19,106 @@ const fetchToolsList = async (): Promise<GetToolsListResponse> => {
       ),
   }));
 
+  const categories = ToolsDatabase.getCategories();
+
   return {
-    tools: toolsWithMethods,
-    categories: TOOL_CATEGORIES,
+    tools,
+    categories,
   };
 };
 
 export function useAvailableTools() {
   return useQuery<GetToolsListResponse, Error>({
-    queryKey: ["tools", "list"],
-    queryFn: fetchToolsList,
+    queryKey: ["tools", "local"],
+    queryFn: fetchLocalToolsList,
     staleTime: Infinity, // Tools list doesn't change during app session
-    retry: 3,
-    retryDelay: 1000,
+    cacheTime: Infinity,
+    retry: false, // No retry needed for local data
   });
 }
 
-// Additional hooks for specific tool queries
-export function useToolById(toolId: string) {
-  const { data: toolsData } = useAvailableTools();
+// Additional hooks for tool management
+export function useToolById(toolId: string | null) {
+  return useQuery<AiTool | null, Error>({
+    queryKey: ["tool", toolId],
+    queryFn: () => {
+      if (!toolId) return null;
+      const tool = ToolsDatabase.getToolById(toolId);
+      if (!tool) return null;
 
-  return toolsData?.tools.find((tool) => tool.id === toolId) || null;
+      return {
+        ...tool,
+        getName: (lang: "ar" | "en") =>
+          lang === "ar" ? tool.name_ar : tool.name_en,
+        getDescription: (lang: "ar" | "en") =>
+          lang === "ar" ? tool.description_ar : tool.description_en,
+        getFeatures: (lang: "ar" | "en") =>
+          tool.features.map((f) =>
+            lang === "ar" ? f.description_ar : f.description_en,
+          ),
+      };
+    },
+    enabled: !!toolId,
+    staleTime: Infinity,
+  });
 }
 
-export function useToolsByCategory(category: string) {
-  const { data: toolsData } = useAvailableTools();
+export function useToolsByCategory(category: string | null) {
+  return useQuery<AiTool[], Error>({
+    queryKey: ["tools", "category", category],
+    queryFn: () => {
+      if (!category || category === "all") {
+        return AI_TOOLS_DATABASE.map((tool) => ({
+          ...tool,
+          getName: (lang: "ar" | "en") =>
+            lang === "ar" ? tool.name_ar : tool.name_en,
+          getDescription: (lang: "ar" | "en") =>
+            lang === "ar" ? tool.description_ar : tool.description_en,
+          getFeatures: (lang: "ar" | "en") =>
+            tool.features.map((f) =>
+              lang === "ar" ? f.description_ar : f.description_en,
+            ),
+        }));
+      }
 
-  return toolsData?.tools.filter((tool) => tool.category === category) || [];
+      const tools = ToolsDatabase.getToolsByCategory(category);
+      return tools.map((tool) => ({
+        ...tool,
+        getName: (lang: "ar" | "en") =>
+          lang === "ar" ? tool.name_ar : tool.name_en,
+        getDescription: (lang: "ar" | "en") =>
+          lang === "ar" ? tool.description_ar : tool.description_en,
+        getFeatures: (lang: "ar" | "en") =>
+          tool.features.map((f) =>
+            lang === "ar" ? f.description_ar : f.description_en,
+          ),
+      }));
+    },
+    enabled: !!category,
+    staleTime: Infinity,
+  });
+}
+
+export function useSearchTools(query: string, language: "ar" | "en" = "en") {
+  return useQuery<AiTool[], Error>({
+    queryKey: ["tools", "search", query, language],
+    queryFn: () => {
+      if (!query.trim()) return [];
+
+      const tools = ToolsDatabase.searchTools(query, language);
+      return tools.map((tool) => ({
+        ...tool,
+        getName: (lang: "ar" | "en") =>
+          lang === "ar" ? tool.name_ar : tool.name_en,
+        getDescription: (lang: "ar" | "en") =>
+          lang === "ar" ? tool.description_ar : tool.description_en,
+        getFeatures: (lang: "ar" | "en") =>
+          tool.features.map((f) =>
+            lang === "ar" ? f.description_ar : f.description_en,
+          ),
+      }));
+    },
+    enabled: query.trim().length > 0,
+    staleTime: 30000, // Search results cache for 30 seconds
+  });
 }
