@@ -75,6 +75,137 @@
     font-family: "Inter", sans-serif;
   }
 
+  /* Glassmorphism Effects */
+  .glass {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  }
+
+  .glass-strong {
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+  }
+
+  .glass-subtle {
+    background: rgba(255, 255, 255, 0.02);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  }
+
+  /* Neon Effects */
+  .neon-text {
+    text-shadow:
+      0 0 5px currentColor,
+      0 0 10px currentColor,
+      0 0 15px currentColor,
+      0 0 20px currentColor;
+    animation: textGlow 2s ease-in-out infinite alternate;
+  }
+
+  .neon-border {
+    border: 2px solid hsl(var(--neon-cyan));
+    box-shadow:
+      0 0 10px hsl(var(--neon-cyan)),
+      inset 0 0 10px hsl(var(--neon-cyan));
+    animation: borderGlow 2s ease-in-out infinite alternate;
+  }
+
+  .error-glow {
+    box-shadow:
+      0 0 20px rgba(239, 68, 68, 0.5),
+      0 0 40px rgba(239, 68, 68, 0.3),
+      0 0 60px rgba(239, 68, 68, 0.1);
+  }
+
+  /* Animations */
+  @keyframes textGlow {
+    from {
+      text-shadow:
+        0 0 5px currentColor,
+        0 0 10px currentColor,
+        0 0 15px currentColor;
+    }
+    to {
+      text-shadow:
+        0 0 10px currentColor,
+        0 0 20px currentColor,
+        0 0 30px currentColor,
+        0 0 40px currentColor;
+    }
+  }
+
+  @keyframes borderGlow {
+    from {
+      box-shadow:
+        0 0 10px currentColor,
+        inset 0 0 10px currentColor;
+    }
+    to {
+      box-shadow:
+        0 0 20px currentColor,
+        0 0 30px currentColor,
+        inset 0 0 20px currentColor;
+    }
+  }
+
+  @keyframes float {
+    0%,
+    100% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
+  }
+
+  @keyframes pulse-glow {
+    0%,
+    100% {
+      box-shadow: 0 0 20px rgba(6, 255, 165, 0.4);
+    }
+    50% {
+      box-shadow: 0 0 40px rgba(6, 255, 165, 0.8);
+    }
+  }
+
+  /* Utility Classes */
+  .animate-float {
+    animation: float 3s ease-in-out infinite;
+  }
+
+  .animate-pulse-glow {
+    animation: pulse-glow 2s ease-in-out infinite;
+  }
+
+  .line-clamp-1 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+  }
+
+  .line-clamp-2 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+  }
+
+  .line-clamp-3 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+  }
+
   /* RTL Support */
   [dir="rtl"] {
     direction: rtl;
