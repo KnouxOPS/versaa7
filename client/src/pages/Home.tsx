@@ -362,49 +362,44 @@ export default function Home() {
 
               {/* Stats Cards */}
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
-                {[
-                  {
-                    label: "AI Tools",
-                    value: stats.totalTools,
-                    icon: "fa-robot",
-                    color: "cyan",
-                  },
-                  {
-                    label: "Active Users",
-                    value: stats.activeUsers.toLocaleString(),
-                    icon: "fa-users",
-                    color: "green",
-                  },
-                  {
-                    label: "Images Processed",
-                    value: stats.processedImages.toLocaleString(),
-                    icon: "fa-images",
-                    color: "purple",
-                  },
-                  {
-                    label: "Uptime",
-                    value: stats.uptime,
-                    icon: "fa-heartbeat",
-                    color: "pink",
-                  },
-                ].map((stat, index) => (
-                  <Card
-                    key={index}
-                    className={`glass-strong p-4 border border-${stat.color}-400/30 hover:border-${stat.color}-400/50 transition-all duration-300 hover:scale-105`}
-                  >
-                    <div className="text-center">
-                      <i
-                        className={`fas ${stat.icon} text-2xl text-${stat.color}-400 mb-2`}
-                      ></i>
-                      <div
-                        className={`text-xl font-bold text-${stat.color}-400`}
-                      >
-                        {stat.value}
-                      </div>
-                      <div className="text-xs text-gray-400">{stat.label}</div>
+                <Card className="glass-strong p-4 border border-cyan-400/30 hover:border-cyan-400/50 transition-all duration-300 hover:scale-105">
+                  <div className="text-center">
+                    <i className="fas fa-robot text-2xl text-cyan-400 mb-2"></i>
+                    <div className="text-xl font-bold text-cyan-400">
+                      {stats.totalTools}
                     </div>
-                  </Card>
-                ))}
+                    <div className="text-xs text-gray-400">AI Tools</div>
+                  </div>
+                </Card>
+                <Card className="glass-strong p-4 border border-green-400/30 hover:border-green-400/50 transition-all duration-300 hover:scale-105">
+                  <div className="text-center">
+                    <i className="fas fa-users text-2xl text-green-400 mb-2"></i>
+                    <div className="text-xl font-bold text-green-400">
+                      {stats.activeUsers.toLocaleString()}
+                    </div>
+                    <div className="text-xs text-gray-400">Active Users</div>
+                  </div>
+                </Card>
+                <Card className="glass-strong p-4 border border-purple-400/30 hover:border-purple-400/50 transition-all duration-300 hover:scale-105">
+                  <div className="text-center">
+                    <i className="fas fa-images text-2xl text-purple-400 mb-2"></i>
+                    <div className="text-xl font-bold text-purple-400">
+                      {stats.processedImages.toLocaleString()}
+                    </div>
+                    <div className="text-xs text-gray-400">
+                      Images Processed
+                    </div>
+                  </div>
+                </Card>
+                <Card className="glass-strong p-4 border border-pink-400/30 hover:border-pink-400/50 transition-all duration-300 hover:scale-105">
+                  <div className="text-center">
+                    <i className="fas fa-heartbeat text-2xl text-pink-400 mb-2"></i>
+                    <div className="text-xl font-bold text-pink-400">
+                      {stats.uptime}
+                    </div>
+                    <div className="text-xs text-gray-400">Uptime</div>
+                  </div>
+                </Card>
               </div>
 
               {/* Success Motto */}
