@@ -276,10 +276,7 @@ export default function Home() {
           {/* Hero Section */}
           <div className="text-center mb-12">
             <h2 className="text-responsive-xl font-bold mb-4 neon-text text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-600 animate-float">
-              🧠{" "}
-              {t(
-                "Knoux-VERSA | نظام متقدم لتحرير الصور المعتمد على الذكاء الاصطناعي",
-              )}
+              🧠 {t("30 أداة ذكاء اصطناعي محلية • خصوصية كاملة • بلا رقابة")}
             </h2>
             <p className="text-responsive-md text-gray-300 max-w-6xl mx-auto mb-6 leading-relaxed">
               {t(
