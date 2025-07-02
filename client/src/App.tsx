@@ -7,12 +7,16 @@ import { LanguageProvider } from "@/components/LanguageProvider";
 import Home from "@/pages/Home";
 import About from "@/pages/About";
 import NotFound from "@/pages/not-found";
+import MyComponent from "@/components/MyComponent";
+import BuilderHero from "@/components/BuilderHero";
 
 function Router() {
   return (
     <Switch>
       <Route path="/" component={Home} />
       <Route path="/about" component={About} />
+      <Route path="/builder" component={MyComponent} />
+      <Route path="/hero" component={BuilderHero} />
       <Route component={NotFound} />
     </Switch>
   );
