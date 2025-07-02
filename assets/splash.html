@@ -1,0 +1,357 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>KNOUX VERSA - Loading</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        height: 100vh;
+        background: linear-gradient(
+          135deg,
+          #0a0a0a 0%,
+          #1a1a2e 25%,
+          #16213e 50%,
+          #1a1a2e 75%,
+          #0a0a0a 100%
+        );
+        color: white;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
+        position: relative;
+      }
+
+      /* Animated background particles */
+      .particles {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        z-index: 1;
+      }
+
+      .particle {
+        position: absolute;
+        width: 2px;
+        height: 2px;
+        background: rgba(0, 255, 255, 0.5);
+        border-radius: 50%;
+        animation: float 8s infinite ease-in-out;
+      }
+
+      .particle:nth-child(2n) {
+        background: rgba(139, 92, 246, 0.5);
+        animation-delay: -2s;
+        animation-duration: 6s;
+      }
+
+      .particle:nth-child(3n) {
+        background: rgba(255, 255, 255, 0.3);
+        animation-delay: -4s;
+        animation-duration: 10s;
+      }
+
+      @keyframes float {
+        0%,
+        100% {
+          transform: translateY(100vh) translateX(0px) rotate(0deg);
+          opacity: 0;
+        }
+        10% {
+          opacity: 1;
+        }
+        90% {
+          opacity: 1;
+        }
+        100% {
+          transform: translateY(-100px) translateX(100px) rotate(360deg);
+          opacity: 0;
+        }
+      }
+
+      /* Main content */
+      .content {
+        position: relative;
+        z-index: 10;
+        text-align: center;
+        max-width: 400px;
+        padding: 2rem;
+      }
+
+      /* Logo */
+      .logo {
+        width: 120px;
+        height: 120px;
+        margin: 0 auto 2rem;
+        background: linear-gradient(135deg, #00ffff, #8b5cf6);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 48px;
+        font-weight: bold;
+        position: relative;
+        animation: logoGlow 3s ease-in-out infinite;
+        box-shadow: 0 0 30px rgba(0, 255, 255, 0.5);
+      }
+
+      .logo::before {
+        content: "";
+        position: absolute;
+        top: -5px;
+        left: -5px;
+        right: -5px;
+        bottom: -5px;
+        background: linear-gradient(135deg, #00ffff, #8b5cf6, #00ffff);
+        border-radius: 50%;
+        z-index: -1;
+        animation: rotate 4s linear infinite;
+        opacity: 0.7;
+      }
+
+      @keyframes logoGlow {
+        0%,
+        100% {
+          transform: scale(1);
+          box-shadow: 0 0 30px rgba(0, 255, 255, 0.5);
+        }
+        50% {
+          transform: scale(1.05);
+          box-shadow: 0 0 40px rgba(139, 92, 246, 0.7);
+        }
+      }
+
+      @keyframes rotate {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      /* Title */
+      .title {
+        font-size: 2.5rem;
+        font-weight: bold;
+        background: linear-gradient(135deg, #00ffff, #8b5cf6, #00ffff);
+        background-size: 200% 200%;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 0.5rem;
+        animation: gradientShift 3s ease-in-out infinite;
+        text-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+      }
+
+      @keyframes gradientShift {
+        0%,
+        100% {
+          background-position: 0% 50%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+      }
+
+      /* Subtitle */
+      .subtitle {
+        font-size: 0.9rem;
+        color: rgba(255, 255, 255, 0.7);
+        margin-bottom: 2rem;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+      }
+
+      /* Loading animation */
+      .loading-container {
+        width: 100%;
+        margin-bottom: 1rem;
+      }
+
+      .loading-bar {
+        width: 100%;
+        height: 6px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 3px;
+        overflow: hidden;
+        position: relative;
+      }
+
+      .loading-progress {
+        height: 100%;
+        background: linear-gradient(90deg, #00ffff, #8b5cf6, #00ffff);
+        background-size: 200% 100%;
+        border-radius: 3px;
+        animation:
+          loadingProgress 2.5s ease-in-out infinite,
+          gradientFlow 1.5s linear infinite;
+        box-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+      }
+
+      @keyframes loadingProgress {
+        0% {
+          width: 0%;
+        }
+        50% {
+          width: 70%;
+        }
+        100% {
+          width: 100%;
+        }
+      }
+
+      @keyframes gradientFlow {
+        0% {
+          background-position: 0% 50%;
+        }
+        100% {
+          background-position: 200% 50%;
+        }
+      }
+
+      /* Loading text */
+      .loading-text {
+        font-size: 0.8rem;
+        color: rgba(255, 255, 255, 0.6);
+        margin-top: 1rem;
+        animation: pulse 2s ease-in-out infinite;
+      }
+
+      @keyframes pulse {
+        0%,
+        100% {
+          opacity: 0.6;
+        }
+        50% {
+          opacity: 1;
+        }
+      }
+
+      /* Status messages */
+      .status {
+        font-size: 0.7rem;
+        color: rgba(0, 255, 255, 0.8);
+        margin-top: 1rem;
+        min-height: 1rem;
+        animation: statusFade 3s ease-in-out infinite;
+      }
+
+      @keyframes statusFade {
+        0%,
+        100% {
+          opacity: 0.5;
+        }
+        50% {
+          opacity: 1;
+        }
+      }
+
+      /* Creator credit */
+      .creator {
+        position: absolute;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 0.6rem;
+        color: rgba(255, 255, 255, 0.4);
+        text-align: center;
+      }
+
+      .creator .name {
+        color: rgba(0, 255, 255, 0.8);
+        font-weight: bold;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Animated particles -->
+    <div class="particles">
+      <!-- Particles will be generated by JavaScript -->
+    </div>
+
+    <div class="content">
+      <div class="logo">K</div>
+      <h1 class="title">KNOUX VERSA</h1>
+      <p class="subtitle">The Uncensored AI Nexus</p>
+
+      <div class="loading-container">
+        <div class="loading-bar">
+          <div class="loading-progress"></div>
+        </div>
+      </div>
+
+      <div class="loading-text">Initializing AI Systems...</div>
+      <div class="status" id="status">Loading neural networks</div>
+    </div>
+
+    <div class="creator">
+      Created with passion by <span class="name">Sadek Elgazar</span><br />
+      Abu Dhabi, UAE 🇦🇪
+    </div>
+
+    <script>
+      // Generate particles
+      function createParticles() {
+        const particles = document.querySelector(".particles");
+        const particleCount = 50;
+
+        for (let i = 0; i < particleCount; i++) {
+          const particle = document.createElement("div");
+          particle.className = "particle";
+          particle.style.left = Math.random() * 100 + "%";
+          particle.style.animationDelay = Math.random() * 8 + "s";
+          particle.style.animationDuration = Math.random() * 5 + 5 + "s";
+          particles.appendChild(particle);
+        }
+      }
+
+      // Rotate status messages
+      function rotateStatus() {
+        const statusMessages = [
+          "Loading neural networks...",
+          "Initializing AI models...",
+          "Preparing workspace...",
+          "Loading 30 AI tools...",
+          "Setting up glassmorphism UI...",
+          "Enabling Arabic & English support...",
+          "Configuring privacy systems...",
+          "Almost ready...",
+        ];
+
+        const statusElement = document.getElementById("status");
+        let index = 0;
+
+        setInterval(() => {
+          statusElement.textContent = statusMessages[index];
+          index = (index + 1) % statusMessages.length;
+        }, 1500);
+      }
+
+      // Initialize
+      document.addEventListener("DOMContentLoaded", () => {
+        createParticles();
+        rotateStatus();
+
+        // Auto-close after 4 seconds (sync with Electron main process)
+        setTimeout(() => {
+          if (window.electronAPI) {
+            window.electronAPI.closeSplash();
+          }
+        }, 4000);
+      });
+    </script>
+  </body>
+</html>
