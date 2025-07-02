@@ -4,7 +4,6 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 // Import our custom components
 import {
@@ -15,28 +14,31 @@ import {
   KnouxTurboButton,
 } from "../components/KnouxComponents";
 
+interface ComponentCategory {
+  id: string;
+  name: string;
+  nameAr: string;
+  icon: string;
+  count: number;
+  color: string;
+}
+
 interface ComponentExample {
   id: string;
   name: string;
   nameAr: string;
   description: string;
   descriptionAr: string;
-  category: "inputs" | "feedback" | "navigation" | "data" | "layout";
+  category: string;
   component: React.ReactNode;
   code: string;
-  props?: Array<{
-    name: string;
-    type: string;
-    default?: any;
-    description: string;
-  }>;
 }
 
 export const ComponentsLibrary: React.FC = () => {
   const { language } = useLanguage();
   const lang = language || "en";
 
-  const [activeCategory, setActiveCategory] = useState<string>("inputs");
+  const [selectedCategory, setSelectedCategory] = useState<string>("inputs");
   const [selectedComponent, setSelectedComponent] =
     useState<ComponentExample | null>(null);
   const [showCode, setShowCode] = useState(false);
@@ -47,7 +49,50 @@ export const ComponentsLibrary: React.FC = () => {
   const [selectValue, setSelectValue] = useState("option1");
   const [turboActive, setTurboActive] = useState(false);
 
-  const componentExamples: ComponentExample[] = [
+  const categories: ComponentCategory[] = [
+    {
+      id: "inputs",
+      name: "Inputs",
+      nameAr: "المدخلات",
+      icon: "fa-edit",
+      count: 4,
+      color: "cyan",
+    },
+    {
+      id: "feedback",
+      name: "Feedback",
+      nameAr: "التعليقات",
+      icon: "fa-bell",
+      count: 4,
+      color: "green",
+    },
+    {
+      id: "navigation",
+      name: "Navigation",
+      nameAr: "التنقل",
+      icon: "fa-compass",
+      count: 4,
+      color: "blue",
+    },
+    {
+      id: "data",
+      name: "Data Display",
+      nameAr: "عرض البيانات",
+      icon: "fa-chart-bar",
+      count: 4,
+      color: "purple",
+    },
+    {
+      id: "layout",
+      name: "Layout",
+      nameAr: "التخطيط",
+      icon: "fa-th-large",
+      count: 4,
+      color: "orange",
+    },
+  ];
+
+  const components: ComponentExample[] = [
     {
       id: "knoux-toggle",
       name: "Knoux Toggle",
@@ -68,562 +113,285 @@ export const ComponentsLibrary: React.FC = () => {
   onChange={setToggleValue}
   label="Enable Feature"
   description="Toggle this awesome feature on or off"
-  size="md"
-  disabled={false}
 />`,
-      props: [
-        {
-          name: "checked",
-          type: "boolean",
-          description: "Current state of the toggle",
-        },
-        {
-          name: "onChange",
-          type: "(checked: boolean) => void",
-          description: "Callback when state changes",
-        },
-        {
-          name: "label",
-          type: "string",
-          description: "Label text for the toggle",
-        },
-        {
-          name: "description",
-          type: "string",
-          description: "Description text below the label",
-        },
-        {
-          name: "size",
-          type: "'sm' | 'md' | 'lg'",
-          default: "'md'",
-          description: "Size of the toggle",
-        },
-        {
-          name: "disabled",
-          type: "boolean",
-          default: "false",
-          description: "Whether the toggle is disabled",
-        },
-      ],
     },
     {
       id: "knoux-slider",
       name: "Knoux Slider",
-      nameAr: "شريط تمرير كنوكس",
+      nameAr: "شريط التمرير كنوكس",
       description: "Neon slider with glowing effects and smooth animations",
-      descriptionAr: "شريط تمرير نيون مع تأثيرات متوهجة وحركات سلسة",
+      descriptionAr: "شريط تمرير نيون مع تأثيرات متوهجة وحركات ناعمة",
       category: "inputs",
       component: (
         <KnouxSlider
           value={sliderValue}
           onChange={setSliderValue}
-          label="Intensity Level"
           min={0}
           max={100}
-          color="cyan"
-          showValue={true}
+          step={1}
+          label="Intensity Level"
         />
       ),
       code: `<KnouxSlider
   value={sliderValue}
   onChange={setSliderValue}
-  label="Intensity Level"
   min={0}
   max={100}
   step={1}
-  color="cyan"
-  showValue={true}
+  label="Intensity Level"
 />`,
-      props: [
-        {
-          name: "value",
-          type: "number",
-          description: "Current value of the slider",
-        },
-        {
-          name: "onChange",
-          type: "(value: number) => void",
-          description: "Callback when value changes",
-        },
-        {
-          name: "min",
-          type: "number",
-          default: "0",
-          description: "Minimum value",
-        },
-        {
-          name: "max",
-          type: "number",
-          default: "100",
-          description: "Maximum value",
-        },
-        {
-          name: "step",
-          type: "number",
-          default: "1",
-          description: "Step increment",
-        },
-        { name: "label", type: "string", description: "Label for the slider" },
-        {
-          name: "color",
-          type: "'cyan' | 'purple' | 'green' | 'red'",
-          default: "'cyan'",
-          description: "Color theme",
-        },
-        {
-          name: "showValue",
-          type: "boolean",
-          default: "true",
-          description: "Whether to show current value",
-        },
-      ],
     },
     {
       id: "knoux-select",
       name: "Knoux Select",
       nameAr: "قائمة اختيار كنوكس",
       description: "Dropdown select with glassmorphism and neon borders",
-      descriptionAr: "قائمة منسدلة مع تأثير زجاجي وحدود نيون",
+      descriptionAr: "قائمة منسدلة مع زجاجية وحدود نيون",
       category: "inputs",
       component: (
         <KnouxSelect
           value={selectValue}
-          onChange={setSelectValue}
-          label="Choose Option"
+          onValueChange={setSelectValue}
           options={[
-            {
-              value: "option1",
-              label: "First Option",
-              icon: "fa-star",
-              description: "This is the first option",
-            },
-            {
-              value: "option2",
-              label: "Second Option",
-              icon: "fa-heart",
-              description: "This is the second option",
-            },
-            {
-              value: "option3",
-              label: "Third Option",
-              icon: "fa-rocket",
-              description: "This is the third option",
-            },
+            { value: "option1", label: "Option 1" },
+            { value: "option2", label: "Option 2" },
+            { value: "option3", label: "Option 3" },
           ]}
         />
       ),
       code: `<KnouxSelect
   value={selectValue}
-  onChange={setSelectValue}
-  label="Choose Option"
-  placeholder="Select an option..."
+  onValueChange={setSelectValue}
   options={[
-    { value: "option1", label: "First Option", icon: "fa-star", description: "Description" },
-    { value: "option2", label: "Second Option", icon: "fa-heart", description: "Description" }
+    { value: "option1", label: "Option 1" },
+    { value: "option2", label: "Option 2" },
+    { value: "option3", label: "Option 3" },
   ]}
-  disabled={false}
 />`,
-      props: [
-        {
-          name: "value",
-          type: "string",
-          description: "Currently selected value",
-        },
-        {
-          name: "onChange",
-          type: "(value: string) => void",
-          description: "Callback when selection changes",
-        },
-        {
-          name: "options",
-          type: "KnouxSelectOption[]",
-          description: "Array of selectable options",
-        },
-        { name: "label", type: "string", description: "Label for the select" },
-        {
-          name: "placeholder",
-          type: "string",
-          default: "'Select...'",
-          description: "Placeholder text",
-        },
-        {
-          name: "disabled",
-          type: "boolean",
-          default: "false",
-          description: "Whether the select is disabled",
-        },
-      ],
     },
     {
       id: "knoux-turbo-button",
       name: "Knoux Turbo Button",
       nameAr: "زر التوربو كنوكس",
       description: "Powerful turbo activation button with pulsing effects",
-      descriptionAr: "زر تفعيل التوربو القوي مع تأثيرات نابضة",
+      descriptionAr: "زر تفعيل توربو قوي مع تأثيرات نابضة",
       category: "inputs",
       component: (
-        <div className="flex items-center justify-center p-4">
-          <KnouxTurboButton
-            isActive={turboActive}
-            onClick={() => setTurboActive(!turboActive)}
-            size="lg"
-          />
-        </div>
+        <KnouxTurboButton active={turboActive} onToggle={setTurboActive} />
       ),
       code: `<KnouxTurboButton
-  isActive={turboActive}
-  onClick={() => setTurboActive(!turboActive)}
-  size="lg"
-  disabled={false}
+  active={turboActive}
+  onToggle={setTurboActive}
 />`,
-      props: [
-        {
-          name: "isActive",
-          type: "boolean",
-          description: "Whether turbo mode is active",
-        },
-        {
-          name: "onClick",
-          type: "() => void",
-          description: "Callback when button is clicked",
-        },
-        {
-          name: "size",
-          type: "'sm' | 'md' | 'lg'",
-          default: "'lg'",
-          description: "Size of the button",
-        },
-        {
-          name: "disabled",
-          type: "boolean",
-          default: "false",
-          description: "Whether the button is disabled",
-        },
-      ],
-    },
-    {
-      id: "knoux-tooltip",
-      name: "Knoux Tooltip",
-      nameAr: "تلميح كنوكس",
-      description: "Smart tooltip with personality-based content",
-      descriptionAr: "تلميح ذكي مع محتوى يعتمد على الشخصية",
-      category: "feedback",
-      component: (
-        <div className="flex gap-4 items-center justify-center p-4">
-          <KnouxTooltip
-            content="Professional tooltip"
-            personality="professional"
-          >
-            <Button variant="outline" size="sm">
-              Professional
-            </Button>
-          </KnouxTooltip>
-          <KnouxTooltip content="Friendly tooltip" personality="casual">
-            <Button variant="outline" size="sm">
-              Casual
-            </Button>
-          </KnouxTooltip>
-          <KnouxTooltip content="Badass tooltip" personality="badass">
-            <Button variant="outline" size="sm">
-              Badass
-            </Button>
-          </KnouxTooltip>
-        </div>
-      ),
-      code: `<KnouxTooltip 
-  content="Your tooltip content"
-  personality="badass"
-  position="top"
->
-  <Button>Hover me!</Button>
-</KnouxTooltip>`,
-      props: [
-        {
-          name: "content",
-          type: "string",
-          description: "Tooltip content text",
-        },
-        {
-          name: "children",
-          type: "React.ReactNode",
-          description: "Element to show tooltip on hover",
-        },
-        {
-          name: "position",
-          type: "'top' | 'bottom' | 'left' | 'right'",
-          default: "'top'",
-          description: "Position of tooltip",
-        },
-        {
-          name: "personality",
-          type: "'professional' | 'casual' | 'badass'",
-          default: "'badass'",
-          description: "Tooltip personality style",
-        },
-      ],
     },
   ];
 
-  const categories = [
-    { id: "inputs", label: "Inputs", labelAr: "المدخلات", icon: "fa-edit" },
-    {
-      id: "feedback",
-      label: "Feedback",
-      labelAr: "التفاعل",
-      icon: "fa-comment",
-    },
-    {
-      id: "navigation",
-      label: "Navigation",
-      labelAr: "التنقل",
-      icon: "fa-compass",
-    },
-    {
-      id: "data",
-      label: "Data Display",
-      labelAr: "عرض البيانات",
-      icon: "fa-chart-bar",
-    },
-    { id: "layout", label: "Layout", labelAr: "التخطيط", icon: "fa-th-large" },
-  ];
-
-  const filteredComponents = componentExamples.filter(
-    (comp) => comp.category === activeCategory,
-  );
-
-  const copyToClipboard = (text: string) => {
-    navigator.clipboard.writeText(text);
-    // You could add a notification here
+  const getColorClasses = (color: string) => {
+    const colors = {
+      cyan: "border-cyan-400/30 hover:border-cyan-400/50 text-cyan-400",
+      green: "border-green-400/30 hover:border-green-400/50 text-green-400",
+      blue: "border-blue-400/30 hover:border-blue-400/50 text-blue-400",
+      purple: "border-purple-400/30 hover:border-purple-400/50 text-purple-400",
+      orange: "border-orange-400/30 hover:border-orange-400/50 text-orange-400",
+    };
+    return colors[color as keyof typeof colors] || colors.cyan;
   };
+
+  const filteredComponents = components.filter(
+    (comp) => comp.category === selectedCategory,
+  );
 
   return (
     <div className="h-full flex">
-      {/* Components Sidebar */}
-      <div className="w-80 border-r border-cyan-400/20 bg-gradient-to-b from-[#222227]/60 to-[#0F0F12]/60">
-        <div className="p-4">
-          <h2 className="text-lg font-bold text-white mb-4">
-            {lang === "ar" ? "مكتبة المكونات" : "Components Library"}
-          </h2>
+      {/* Sidebar - Categories */}
+      <div className="w-80 border-r border-gray-700/50 bg-gradient-to-b from-gray-900/50 to-gray-800/50">
+        <div className="p-6">
+          {/* Header */}
+          <div className="mb-6">
+            <h2 className="text-xl font-bold text-white mb-2">
+              {lang === "ar" ? "مكتبة المكونات" : "Components Library"}
+            </h2>
+            <p className="text-gray-400 text-sm">
+              {lang === "ar"
+                ? "مكونات UI مخصصة لكنوكس"
+                : "Custom UI components for Knoux"}
+            </p>
+          </div>
 
-          {/* Categories */}
-          <div className="space-y-2 mb-6">
+          {/* Categories Grid */}
+          <div className="space-y-3">
             {categories.map((category) => (
               <button
                 key={category.id}
-                onClick={() => setActiveCategory(category.id)}
-                className={`w-full flex items-center gap-3 p-3 rounded-lg transition-all duration-300 ${
-                  activeCategory === category.id
-                    ? "bg-gradient-to-r from-cyan-400/20 to-purple-400/20 border border-cyan-400/30 text-white"
-                    : "hover:bg-white/5 text-gray-300 hover:text-white"
+                onClick={() => setSelectedCategory(category.id)}
+                className={`w-full p-4 rounded-xl transition-all duration-300 ${
+                  selectedCategory === category.id
+                    ? `glass-strong ${getColorClasses(category.color)} shadow-[0_0_20px_rgba(0,255,255,0.1)]`
+                    : "hover:bg-white/5 text-gray-400 hover:text-white border border-transparent hover:border-gray-600"
                 }`}
               >
-                <i
-                  className={`fas ${category.icon} ${
-                    activeCategory === category.id
-                      ? "text-cyan-400"
-                      : "text-gray-400"
-                  }`}
-                ></i>
-                <span className="font-medium">
-                  {lang === "ar" ? category.labelAr : category.label}
-                </span>
-                <Badge className="ml-auto text-xs bg-gray-600 text-gray-300">
-                  {filteredComponents.length}
-                </Badge>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div
+                      className={`w-10 h-10 rounded-lg flex items-center justify-center ${
+                        selectedCategory === category.id
+                          ? `bg-${category.color}-400/20`
+                          : "bg-gray-700/50"
+                      }`}
+                    >
+                      <i className={`fas ${category.icon}`}></i>
+                    </div>
+                    <div className="text-left">
+                      <div className="font-medium">
+                        {lang === "ar" ? category.nameAr : category.name}
+                      </div>
+                    </div>
+                  </div>
+                  <Badge variant="outline" className="text-xs">
+                    {category.count}
+                  </Badge>
+                </div>
               </button>
             ))}
           </div>
 
-          {/* Components List */}
-          <ScrollArea className="h-96">
-            <div className="space-y-2">
-              {filteredComponents.map((component) => (
-                <button
-                  key={component.id}
-                  onClick={() => setSelectedComponent(component)}
-                  className={`w-full text-left p-3 rounded-lg transition-all duration-300 ${
-                    selectedComponent?.id === component.id
-                      ? "bg-blue-400/20 border border-blue-400/30"
-                      : "hover:bg-white/5 border border-transparent"
-                  }`}
-                >
-                  <div className="font-medium text-white text-sm">
-                    {lang === "ar" ? component.nameAr : component.name}
-                  </div>
-                  <div className="text-xs text-gray-400 mt-1 line-clamp-2">
-                    {lang === "ar"
-                      ? component.descriptionAr
-                      : component.description}
-                  </div>
-                </button>
-              ))}
+          {/* Selected Component Info */}
+          {selectedComponent && (
+            <div className="mt-8 glass-strong p-4 rounded-lg">
+              <h3 className="font-semibold text-white mb-2">
+                {lang === "ar"
+                  ? selectedComponent.nameAr
+                  : selectedComponent.name}
+              </h3>
+              <p className="text-gray-400 text-sm mb-3">
+                {lang === "ar"
+                  ? selectedComponent.descriptionAr
+                  : selectedComponent.description}
+              </p>
+              <Button
+                onClick={() => setShowCode(!showCode)}
+                size="sm"
+                variant="outline"
+                className="w-full border-cyan-400/30 text-cyan-400 hover:bg-cyan-400/10"
+              >
+                <i className="fas fa-code mr-2"></i>
+                {showCode ? "Hide Code" : "Show Code"}
+              </Button>
             </div>
-          </ScrollArea>
+          )}
         </div>
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 flex flex-col">
-        {selectedComponent ? (
-          <>
-            {/* Component Header */}
-            <div className="p-6 border-b border-cyan-400/20">
-              <div className="flex justify-between items-start">
-                <div>
-                  <h1 className="text-2xl font-bold text-white mb-2">
-                    {lang === "ar"
-                      ? selectedComponent.nameAr
-                      : selectedComponent.name}
-                  </h1>
-                  <p className="text-gray-400">
-                    {lang === "ar"
-                      ? selectedComponent.descriptionAr
-                      : selectedComponent.description}
-                  </p>
-                </div>
-                <div className="flex gap-2">
-                  <Button
-                    onClick={() => setShowCode(!showCode)}
-                    size="sm"
-                    variant="outline"
-                    className="border-cyan-400/30 text-cyan-400 hover:bg-cyan-400/10"
-                  >
-                    <i className="fas fa-code mr-2"></i>
-                    {showCode
-                      ? lang === "ar"
-                        ? "إخفاء الكود"
-                        : "Hide Code"
-                      : lang === "ar"
-                        ? "عرض الكود"
-                        : "Show Code"}
-                  </Button>
-                  <Button
-                    onClick={() => copyToClipboard(selectedComponent.code)}
-                    size="sm"
-                    className="bg-green-500 hover:bg-green-600"
-                  >
-                    <i className="fas fa-copy mr-2"></i>
-                    {lang === "ar" ? "نسخ" : "Copy"}
-                  </Button>
-                </div>
-              </div>
-            </div>
-
-            {/* Component Content */}
-            <ScrollArea className="flex-1 p-6">
-              <Tabs value={showCode ? "code" : "demo"} className="w-full">
-                <TabsList className="grid w-full grid-cols-2">
-                  <TabsTrigger value="demo" onClick={() => setShowCode(false)}>
-                    {lang === "ar" ? "المعاينة" : "Demo"}
-                  </TabsTrigger>
-                  <TabsTrigger value="code" onClick={() => setShowCode(true)}>
-                    {lang === "ar" ? "الكود" : "Code"}
-                  </TabsTrigger>
-                </TabsList>
-
-                <TabsContent value="demo" className="mt-6">
-                  {/* Live Demo */}
-                  <Card className="glass-strong p-8 mb-6">
-                    <h3 className="text-lg font-semibold text-white mb-4">
-                      {lang === "ar" ? "معاينة تفاعلية" : "Interactive Demo"}
-                    </h3>
-                    <div className="flex items-center justify-center min-h-32">
-                      {selectedComponent.component}
-                    </div>
-                  </Card>
-
-                  {/* Props Documentation */}
-                  {selectedComponent.props && (
-                    <Card className="glass-light p-6">
-                      <h3 className="text-lg font-semibold text-white mb-4">
-                        {lang === "ar" ? "الخصائص" : "Props"}
-                      </h3>
-                      <div className="overflow-x-auto">
-                        <table className="w-full text-sm">
-                          <thead>
-                            <tr className="border-b border-gray-600">
-                              <th className="text-left py-2 text-cyan-400">
-                                Name
-                              </th>
-                              <th className="text-left py-2 text-cyan-400">
-                                Type
-                              </th>
-                              <th className="text-left py-2 text-cyan-400">
-                                Default
-                              </th>
-                              <th className="text-left py-2 text-cyan-400">
-                                Description
-                              </th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {selectedComponent.props.map((prop, index) => (
-                              <tr
-                                key={index}
-                                className="border-b border-gray-700/50"
-                              >
-                                <td className="py-2 text-white font-mono">
-                                  {prop.name}
-                                </td>
-                                <td className="py-2 text-purple-400 font-mono">
-                                  {prop.type}
-                                </td>
-                                <td className="py-2 text-gray-400 font-mono">
-                                  {prop.default || "-"}
-                                </td>
-                                <td className="py-2 text-gray-300">
-                                  {prop.description}
-                                </td>
-                              </tr>
-                            ))}
-                          </tbody>
-                        </table>
-                      </div>
-                    </Card>
-                  )}
-                </TabsContent>
-
-                <TabsContent value="code" className="mt-6">
-                  <Card className="glass-light p-6">
-                    <div className="flex justify-between items-center mb-4">
-                      <h3 className="text-lg font-semibold text-white">
-                        {lang === "ar" ? "كود المثال" : "Example Code"}
-                      </h3>
-                      <Button
-                        onClick={() => copyToClipboard(selectedComponent.code)}
-                        size="sm"
-                        variant="outline"
-                        className="border-green-400/30 text-green-400 hover:bg-green-400/10"
-                      >
-                        <i className="fas fa-copy mr-2"></i>
-                        {lang === "ar" ? "نسخ الكود" : "Copy Code"}
-                      </Button>
-                    </div>
-                    <pre className="bg-black/50 p-4 rounded-lg overflow-x-auto text-sm">
-                      <code className="text-gray-300">
-                        {selectedComponent.code}
-                      </code>
-                    </pre>
-                  </Card>
-                </TabsContent>
-              </Tabs>
-            </ScrollArea>
-          </>
-        ) : (
-          // No component selected
-          <div className="flex-1 flex items-center justify-center">
-            <div className="text-center">
-              <div className="w-24 h-24 mx-auto mb-4 rounded-full bg-gradient-to-r from-cyan-400 to-purple-600 flex items-center justify-center">
-                <i className="fas fa-cube text-2xl text-white"></i>
-              </div>
-              <h2 className="text-2xl font-bold text-white mb-2">
-                {lang === "ar" ? "اختر مكوناً للمعاينة" : "Select a Component"}
-              </h2>
-              <p className="text-gray-400 max-w-md mx-auto">
+      <div className="flex-1 p-6">
+        {!selectedComponent ? (
+          <div className="h-full">
+            {/* Components Grid */}
+            <div className="mb-6">
+              <h3 className="text-2xl font-bold text-white mb-2">
+                {categories.find((c) => c.id === selectedCategory)?.name}
+              </h3>
+              <p className="text-gray-400">
                 {lang === "ar"
-                  ? "اختر مكوناً من القائمة الجانبية لرؤية المعاينة التفاعلية والكود"
+                  ? "اختر مكوناً من القائمة لرؤية العرض التفاعلي وأمثلة الكود"
                   : "Choose a component from the sidebar to see interactive demo and code examples"}
               </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {filteredComponents.map((component) => (
+                <Card
+                  key={component.id}
+                  className="glass-strong p-6 border border-cyan-400/30 hover:border-cyan-400/50 transition-all duration-300 cursor-pointer hover:scale-105"
+                  onClick={() => setSelectedComponent(component)}
+                >
+                  <div className="mb-4">
+                    <h4 className="text-lg font-semibold text-white mb-2">
+                      {lang === "ar" ? component.nameAr : component.name}
+                    </h4>
+                    <p className="text-gray-400 text-sm">
+                      {lang === "ar"
+                        ? component.descriptionAr
+                        : component.description}
+                    </p>
+                  </div>
+
+                  {/* Component Preview */}
+                  <div className="glass-subtle p-4 rounded-lg">
+                    {component.component}
+                  </div>
+
+                  <div className="mt-4 flex justify-between items-center">
+                    <Badge variant="outline" className="text-xs">
+                      Interactive
+                    </Badge>
+                    <i className="fas fa-arrow-right text-cyan-400"></i>
+                  </div>
+                </Card>
+              ))}
+            </div>
+          </div>
+        ) : (
+          <div className="h-full">
+            {/* Component Detail View */}
+            <div className="mb-6">
+              <Button
+                onClick={() => setSelectedComponent(null)}
+                variant="outline"
+                size="sm"
+                className="mb-4 border-gray-600 hover:bg-gray-700"
+              >
+                <i className="fas fa-arrow-left mr-2"></i>
+                Back to Library
+              </Button>
+
+              <h3 className="text-2xl font-bold text-white mb-2">
+                {lang === "ar"
+                  ? selectedComponent.nameAr
+                  : selectedComponent.name}
+              </h3>
+              <p className="text-gray-400">
+                {lang === "ar"
+                  ? selectedComponent.descriptionAr
+                  : selectedComponent.description}
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 h-[calc(100%-120px)]">
+              {/* Interactive Demo */}
+              <Card className="glass-strong p-6 border border-cyan-400/30">
+                <h4 className="text-lg font-semibold text-white mb-4">
+                  {lang === "ar" ? "عرض تفاعلي" : "Interactive Demo"}
+                </h4>
+                <div className="glass-subtle p-6 rounded-lg">
+                  {selectedComponent.component}
+                </div>
+              </Card>
+
+              {/* Code Example */}
+              {showCode && (
+                <Card className="glass-strong p-6 border border-purple-400/30">
+                  <h4 className="text-lg font-semibold text-white mb-4">
+                    {lang === "ar" ? "مثال على الكود" : "Code Example"}
+                  </h4>
+                  <ScrollArea className="h-64">
+                    <pre className="text-sm text-gray-300 bg-gray-900/50 p-4 rounded-lg overflow-x-auto">
+                      <code>{selectedComponent.code}</code>
+                    </pre>
+                  </ScrollArea>
+                  <Button
+                    onClick={() =>
+                      navigator.clipboard.writeText(selectedComponent.code)
+                    }
+                    size="sm"
+                    variant="outline"
+                    className="mt-4 border-purple-400/30 text-purple-400 hover:bg-purple-400/10"
+                  >
+                    <i className="fas fa-copy mr-2"></i>
+                    Copy Code
+                  </Button>
+                </Card>
+              )}
             </div>
           </div>
         )}
