@@ -6,6 +6,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { LanguageProvider } from "@/components/LanguageProvider";
 import Home from "@/pages/Home";
 import About from "@/pages/About";
+import Builder from "@/pages/Builder";
 import NotFound from "@/pages/not-found";
 import MyComponent from "@/components/MyComponent";
 import BuilderHero from "@/components/BuilderHero";
