@@ -334,40 +334,30 @@ export default function Home() {
 
               {/* Feature Badges */}
               <div className="flex flex-wrap justify-center gap-4 mb-12">
-                {[
-                  {
-                    icon: "fa-microchip",
-                    text: "Local Inference Engine",
-                    color: "cyan",
-                  },
-                  {
-                    icon: "fa-brain",
-                    text: "Deep Multi-Modal Models",
-                    color: "purple",
-                  },
-                  {
-                    icon: "fa-project-diagram",
-                    text: "Modular Architecture",
-                    color: "green",
-                  },
-                  {
-                    icon: "fa-shield-alt",
-                    text: "Zero Network Dependency",
-                    color: "pink",
-                  },
-                ].map((badge, index) => (
-                  <Badge
-                    key={index}
-                    className={`glass px-6 py-3 border border-${badge.color}-400/30 hover:border-${badge.color}-400/50 transition-all duration-300`}
-                  >
-                    <i
-                      className={`fas ${badge.icon} text-${badge.color}-400 mr-2`}
-                    ></i>
-                    <span className={`text-${badge.color}-400 font-semibold`}>
-                      {badge.text}
-                    </span>
-                  </Badge>
-                ))}
+                <Badge className="glass px-6 py-3 border border-cyan-400/30 hover:border-cyan-400/50 transition-all duration-300 hover:scale-105">
+                  <i className="fas fa-microchip text-cyan-400 mr-2"></i>
+                  <span className="text-cyan-400 font-semibold">
+                    Local Inference Engine
+                  </span>
+                </Badge>
+                <Badge className="glass px-6 py-3 border border-purple-400/30 hover:border-purple-400/50 transition-all duration-300 hover:scale-105">
+                  <i className="fas fa-brain text-purple-400 mr-2"></i>
+                  <span className="text-purple-400 font-semibold">
+                    Deep Multi-Modal Models
+                  </span>
+                </Badge>
+                <Badge className="glass px-6 py-3 border border-green-400/30 hover:border-green-400/50 transition-all duration-300 hover:scale-105">
+                  <i className="fas fa-project-diagram text-green-400 mr-2"></i>
+                  <span className="text-green-400 font-semibold">
+                    Modular Architecture
+                  </span>
+                </Badge>
+                <Badge className="glass px-6 py-3 border border-pink-400/30 hover:border-pink-400/50 transition-all duration-300 hover:scale-105">
+                  <i className="fas fa-shield-alt text-pink-400 mr-2"></i>
+                  <span className="text-pink-400 font-semibold">
+                    Zero Network Dependency
+                  </span>
+                </Badge>
               </div>
 
               {/* Stats Cards */}
