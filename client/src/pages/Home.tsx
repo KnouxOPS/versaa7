@@ -543,6 +543,12 @@ export default function Home() {
         onClose={() => setShowVIPModal(false)}
         onVIPAccess={handleVIPAccess}
       />
+
+      {/* KNOUX Control Room */}
+      <KnouxControlRoom
+        isOpen={showControlRoom}
+        onClose={() => setShowControlRoom(false)}
+      />
     </div>
   );
 }
