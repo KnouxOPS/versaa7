@@ -424,47 +424,41 @@ export default function Home() {
               className="w-full"
             >
               <TabsList className="grid w-full grid-cols-5 glass-strong rounded-2xl p-2 mb-8 border border-cyan-400/30">
-                {[
-                  {
-                    value: "local_ai",
-                    icon: "fa-robot",
-                    label: "30 أداة AI محلية",
-                    color: "cyan",
-                  },
-                  {
-                    value: "technical",
-                    icon: "fa-microchip",
-                    label: "وحدة تحكم تقنية",
-                    color: "orange",
-                  },
-                  {
-                    value: "models",
-                    icon: "fa-brain",
-                    label: "إدارة النماذج",
-                    color: "purple",
-                  },
-                  {
-                    value: "services",
-                    icon: "fa-cloud",
-                    label: "خدمات السحابة",
-                    color: "blue",
-                  },
-                  {
-                    value: "workspace",
-                    icon: "fa-magic",
-                    label: "ورشة العمل",
-                    color: "green",
-                  },
-                ].map((tab) => (
-                  <TabsTrigger
-                    key={tab.value}
-                    value={tab.value}
-                    className={`data-[state=active]:bg-${tab.color}-400/20 data-[state=active]:text-${tab.color}-400 data-[state=active]:shadow-[0_0_20px_rgba(0,255,239,0.2)] transition-all duration-300`}
-                  >
-                    <i className={`fas ${tab.icon} mr-2`}></i>
-                    <span className="hidden sm:inline">{tab.label}</span>
-                  </TabsTrigger>
-                ))}
+                <TabsTrigger
+                  value="local_ai"
+                  className="data-[state=active]:bg-cyan-400/20 data-[state=active]:text-cyan-400 data-[state=active]:shadow-[0_0_20px_rgba(0,255,239,0.2)] transition-all duration-300"
+                >
+                  <i className="fas fa-robot mr-2"></i>
+                  <span className="hidden sm:inline">30 أداة AI محلية</span>
+                </TabsTrigger>
+                <TabsTrigger
+                  value="technical"
+                  className="data-[state=active]:bg-orange-400/20 data-[state=active]:text-orange-400 data-[state=active]:shadow-[0_0_20px_rgba(251,146,60,0.2)] transition-all duration-300"
+                >
+                  <i className="fas fa-microchip mr-2"></i>
+                  <span className="hidden sm:inline">وحدة تحكم تقنية</span>
+                </TabsTrigger>
+                <TabsTrigger
+                  value="models"
+                  className="data-[state=active]:bg-purple-400/20 data-[state=active]:text-purple-400 data-[state=active]:shadow-[0_0_20px_rgba(139,92,246,0.2)] transition-all duration-300"
+                >
+                  <i className="fas fa-brain mr-2"></i>
+                  <span className="hidden sm:inline">إدارة النماذج</span>
+                </TabsTrigger>
+                <TabsTrigger
+                  value="services"
+                  className="data-[state=active]:bg-blue-400/20 data-[state=active]:text-blue-400 data-[state=active]:shadow-[0_0_20px_rgba(59,130,246,0.2)] transition-all duration-300"
+                >
+                  <i className="fas fa-cloud mr-2"></i>
+                  <span className="hidden sm:inline">خدمات السحابة</span>
+                </TabsTrigger>
+                <TabsTrigger
+                  value="workspace"
+                  className="data-[state=active]:bg-green-400/20 data-[state=active]:text-green-400 data-[state=active]:shadow-[0_0_20px_rgba(34,197,94,0.2)] transition-all duration-300"
+                >
+                  <i className="fas fa-magic mr-2"></i>
+                  <span className="hidden sm:inline">ورشة العمل</span>
+                </TabsTrigger>
               </TabsList>
 
               {/* Tab Contents */}
