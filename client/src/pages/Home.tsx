@@ -289,6 +289,31 @@ export default function Home() {
         </div>
       </nav>
 
+      {/* Live Now Panel - Floating */}
+      <div className="fixed top-24 left-4 z-40">
+        <LiveNowPanel
+          tool={currentTool}
+          model={currentModel}
+          privacy="No Censorship"
+          status={liveStatus}
+          onStop={() => {
+            setLiveStatus("Paused");
+            console.log("تم إيقاف المهمة");
+          }}
+          onSwitch={() => {
+            setCurrentTool(
+              currentTool === "Knoux VERSA" ? "Face Morph" : "Knoux VERSA",
+            );
+            console.log("تم تبديل الأداة");
+          }}
+          onShowLogs={() => {
+            alert(
+              "فتح سجل النشاط...\n\n🧠 AI Inference Engine\n⚡ Processing Speed: 2.3s\n🔒 Privacy: Maximum\n📊 Success Rate: 98.7%",
+            );
+          }}
+        />
+      </div>
+
       {/* Main Content */}
       <main className="pt-24 pb-12">
         <div className="container mx-auto px-4 max-w-7xl">
