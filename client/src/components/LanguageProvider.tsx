@@ -1,4 +1,4 @@
-import { createContext, useState, useEffect, ReactNode } from "react";
+import React, { createContext, useState, useEffect, ReactNode } from "react";
 
 interface LanguageContextType {
   currentLanguage: "en" | "ar";
@@ -390,6 +390,8 @@ const translations = {
       "No area selected - AI will process the entire image",
     "Failed to load image. Please try again.":
       "Failed to load image. Please try again.",
+    "30 أداة ذكاء اصطناعي محلية • خصوصية كاملة • بلا رقابة":
+      "30 Local AI Tools • Complete Privacy • No Censorship",
   },
   ar: {
     // Navigation & Header
@@ -424,7 +426,7 @@ const translations = {
     "Upscale and enhance to Ultra HD quality": "كبّر وحسّن لجودة فائقة الوضوح",
     "VIP Magic Morph": "التحويل السحري VIP",
     "Ultra-advanced AI for complex transformations (Owner Only)":
-      "ذكاء اصطناعي فائق للتحولات المعقدة (المالك فقط)",
+      "ذكاء اصطناعي فائق للتحولات المعقدة (الما��ك فقط)",
     "Sadek Elgazar Exclusive": "حصري لصادق الجزار",
 
     // Image Upload
@@ -520,7 +522,7 @@ const translations = {
     "is an advanced AI platform that automatically edits your images with text commands, without limits or restrictions — 'Select, Write, Be Amazed!'":
       "منصة ذكاء صناعي متقدمة تعدّل صورك أوتوماتيكياً بأوامر نصية، بدون حدود أو قيود — 'ظلّل، اكتب، انبهر!'",
     "It uses the latest AI technologies (Image Generation/Transformation), and a futuristic luxury user interface that supports Arabic and English.":
-      "يستخدم أحدث تقنيات الذكاء الاصطناعي (توليد/تحويل الصور)، وواجهة مستخدم مستقبلية فاخرة تدعم العربية والإنجليزية.",
+      "يس��خدم أحدث تقنيات الذكاء الاصطناعي (توليد/تحويل الصور)، وواجهة مستخدم مستقبلية فاخرة تدعم العربية والإنجليزية.",
     "Why KNOUX VERSA?": "لماذا KNOUX VERSA؟",
     "Fastest & Strongest": "الأسرع والأقوى",
     "Edit images in moments without needing Photoshop or Adobe expertise.":
@@ -597,7 +599,8 @@ const translations = {
     "Object Recoloring": "إعادة تلوين العناصر",
     "Change colors of any object seamlessly": "تغيير ألوان أي عنصر بسلاسة",
     "Text to Object": "نص إلى عنصر",
-    "Add new objects using text descriptions": "إضافة عناصر جديدة بالوصف النصي",
+    "Add new objects using text descriptions":
+      "إضافة ع��اصر جديدة بالوصف النصي",
     Cartoonize: "تحويل كرتوني",
     "Convert realistic photos to cartoon style":
       "تحويل الصور الواقعية إلى أسلوب كرتوني",
@@ -638,7 +641,7 @@ const translations = {
     "VIP Exclusive": "VIP حصري",
     "AI Tools Available": "أداة ذكاء اصطناعي متاحة",
     Category: "فئة",
-    "Adult Content Warning": "تحذير محتوى للبالغين",
+    "Adult Content Warning": "تحذير محتوى للب��لغين",
     "This tool contains adult content (18+). By proceeding, you acknowledge that you are of legal age and accept full responsibility for your use of this content.":
       "تحتوي هذه الأداة على محتوى لل��الغين (+18). بالمتابعة، تقر أنك في السن القانونية وتتحمل المسؤولية الكاملة عن استخدام هذا المحتوى.",
     "I Accept (18+)": "أوافق (+18)",
@@ -663,7 +666,7 @@ const translations = {
     "Core Principles": "المبادئ الأساسية",
     "100% Local Processing": "معالجة محلية 100%",
     "No internet, no external APIs. Every tool, every AI model, every operation happens exclusively on the user's device.":
-      "لا إنترنت، لا APIs خارجية. كل أداة، كل نموذج ذكاء اصطناعي، كل عملية تحدث حصرياً على جهاز المستخدم.",
+      "لا إنترنت، لا APIs خارجية. كل أداة، كل نموذج ذكاء اصطناعي، كل عمل��ة تحدث حصرياً على جهاز المستخدم.",
     "100% Complete Privacy": "خصوصية كاملة 100%",
     "No images or data are uploaded to any external server, ensuring absolute security and privacy of user images.":
       "لا يتم رفع أي صور أو بيانات لأي خادم خارجي، مما يضمن الأمان والخصوصية المطلقة لصور المستخدم.",
@@ -687,7 +690,7 @@ const translations = {
     "Sequential AI commands with unlimited complexity - exclusive to Sadek Elgazar":
       "أوامر ذكاء اصطناعي متسلسلة بتعقيد لامحدود - حصرية لصادق الجزار",
     "Access to all uncensored AI transformations with full creative freedom":
-      "وصول لجميع تحويلات الذكاء الاصطناعي بلا قيود مع حرية إبداعية كاملة",
+      "وصول لجميع تحويلات الذكاء الاصطناعي بلا قيود مع حرية إبد��عية كاملة",
     "Integrated AI Models": "نماذج الذكاء الاصطناعي المدمجة",
     "We integrate only the most powerful open-source AI models, all running locally on your device":
       "ندمج فقط أقوى نماذج الذكاء الاصطناعي مفتوحة المصدر، جميعها تعمل محلياً على جهازك",
@@ -701,17 +704,17 @@ const translations = {
     "Open Source Transparency": "شفافية مفتوحة المصدر",
     "All application code is open source and auditable. Complete transparency in how data is handled and privacy is protected.":
       "جميع أكواد التطبيق مفتوحة المصدر وقابلة للتدقيق. شفافية كاملة في كيفية التعامل مع البيانات وحماية الخصوصية.",
-    "Unrestricted Freedom": "حرية بلا قيود",
+    "Unrestricted Freedom": "حرية بلا ��يود",
     "No content filtering or censorship. Adult tools available with clear user responsibility warnings. Complete creative freedom.":
       "لا تصفية محتوى أو رقابة. أدوات للبالغين متاحة مع تحذيرات واضحة لمسؤولية المستخدم. حرية إبداعية كاملة.",
     "User Responsibility Notice": "إشعار مسؤولية المستخدم",
     "While we provide powerful uncensored tools, users bear complete responsibility for their usage. We include clear warnings for sensitive tools and remind users that using content for illegal or harmful purposes is their personal responsibility alone.":
-      "بينما نوفر أدوات قوية بلا قيود، يتحمل المستخدمون المسؤولية الكاملة عن استخدامها. نتضمن تحذيرات واضحة للأدوات الحساسة ونذكر المستخدمين أن استخدام المحتوى لأغراض غير قانونية أو ضارة هو مسؤوليتهم الشخصية وحدهم.",
+      "بينما نوفر أد��ات قوية بلا قيود، يتحمل ال��ستخدمون المسؤولية الكاملة عن استخدامها. نتضمن تحذيرات واضحة للأدوات الحساسة ونذكر المستخدمين أن استخدام المحتوى لأغراض غير قانونية أو ضارة هو مسؤوليتهم الشخصية وحدهم.",
     "Technical Architecture": "البنية التقنية",
     Backend: "الخلفية",
     Frontend: "الواجهة الأمامية",
     "Performance Optimization": "تحسين الأداء",
-    "GPU Acceleration": "تسريع وحدة الرسومات",
+    "GPU Acceleration": "تسريع وحدة الرس��مات",
     "Full CUDA/ROCm support for NVIDIA and AMD GPUs. Massive performance boost for AI inference.":
       "دعم كامل لـ CUDA/ROCm لوحدات رسومات NVIDIA و AMD. تعزيز أداء هائل لاستنتاج الذكاء الاصطناعي.",
     "Model Optimization": "تحسين النماذج",
@@ -734,7 +737,7 @@ const translations = {
     "Where imagination meets artificial intelligence.":
       "حيث يلتقي الخيال بالذكاء الاصطناعي.",
     Capabilities: "القدرات",
-    "Local Integration": "التكامل المحلي",
+    "Local Integration": "التكامل الم��لي",
     Working: "يعمل",
     "8 Working AI Tools • Complete Privacy • No Censorship • Fully Local Processing":
       "8 أدوات ذكاء اصطناعي تعمل • خصوصية كاملة • بلا رقابة • معالجة محلية كاملة",
@@ -755,7 +758,9 @@ const translations = {
     "No area selected - AI will process the entire image":
       "لم يتم تحديد منطقة - سيعالج الذكاء الاصطناعي الصورة كاملة",
     "Failed to load image. Please try again.":
-      "فشل تحميل الصورة. ي��جى المحاولة مرة أخرى.",
+      "فشل تحميل الصورة. يرجى المحاولة مرة أخرى.",
+    "30 أداة ذكاء اصطناعي محلية • خصوصية كاملة • بلا رقابة":
+      "30 أداة ذكاء اصطناعي محلية • خصوصية كاملة • بلا رقابة",
   },
 };
 

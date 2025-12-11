@@ -1,4 +1,4 @@
-import { AiTool, AIModelIdentifier, ToolFeature } from "@/types/aiTools";
+import { AiTool, AIModelIdentifier, ToolFeature } from "@/shared/types";
 
 // Comprehensive database of all 30 AI Tools for KNOUX-VERSA
 export const AI_TOOLS_DATABASE: AiTool[] = [
@@ -907,7 +907,730 @@ export const AI_TOOLS_DATABASE: AiTool[] = [
     quality_modes: ["natural", "dramatic", "studio"],
   },
 
-  // ... Continue with remaining 16 tools following the same pattern
+  {
+    id: "pose_master",
+    name_ar: "سيد الوضعيات",
+    name_en: "Pose Master",
+    description_ar: "تعديل وضعيات الجسم والحصول على الوضعية المثالية",
+    description_en: "Adjust body poses and achieve the perfect posture",
+    category: "Body",
+    model_info: {
+      name: "ControlNet + PoseNet",
+      backend_identifier: AIModelIdentifier.POSEMASTER,
+      size_gb: 2.1,
+      processing_time_secs: "8-15 ثانية",
+      gpu_required: true,
+      min_vram_gb: 4,
+    },
+    features: [
+      {
+        description_ar: "تعديل وضعيات متقدم",
+        description_en: "Advanced pose adjustment",
+      },
+      {
+        description_ar: "كشف تلقائي للوضعية",
+        description_en: "Automatic pose detection",
+      },
+      {
+        description_ar: "تح��م في نقاط المفاصل",
+        description_en: "Joint point control",
+      },
+      { description_ar: "وضعيات طبيعية", description_en: "Natural poses" },
+    ],
+    is_sensitive: false,
+    requires_mask: false,
+    requires_prompt: true,
+    requires_second_image: false,
+    input_schema: {
+      pose_type: {
+        type: "string",
+        enum: ["standing", "sitting", "action", "custom"],
+        default: "standing",
+      },
+      adjustment_intensity: {
+        type: "number",
+        default: 0.7,
+        description: "Pose adjustment intensity",
+      },
+    },
+    processing_complexity: "high",
+    quality_modes: ["natural", "dramatic", "artistic"],
+  },
+
+  {
+    id: "makeup_artist",
+    name_ar: "فنان المكياج الذكي",
+    name_en: "AI Makeup Artist",
+    description_ar: "تطبيق مكياج احترافي بأنماط متنوعة وألوان مخصصة",
+    description_en:
+      "Apply professional makeup with diverse styles and custom colors",
+    category: "Face",
+    model_info: {
+      name: "MakeupGAN + StyleTransfer",
+      backend_identifier: AIModelIdentifier.MAKEUPGAN,
+      size_gb: 1.8,
+      processing_time_secs: "4-12 ثانية",
+      gpu_required: true,
+      min_vram_gb: 3,
+    },
+    features: [
+      {
+        description_ar: "مكياج عيون متقدم",
+        description_en: "Advanced eye makeup",
+      },
+      { description_ar: "أحمر شفاه مخصص", description_en: "Custom lipstick" },
+      {
+        description_ar: "كونتورينغ طبيعي",
+        description_en: "Natural contouring",
+      },
+      { description_ar: "ألوان متنوعة", description_en: "Diverse colors" },
+    ],
+    is_sensitive: false,
+    requires_mask: false,
+    requires_prompt: true,
+    requires_second_image: false,
+    input_schema: {
+      makeup_style: {
+        type: "string",
+        enum: ["natural", "glamour", "evening", "artistic"],
+        default: "natural",
+      },
+      color_theme: {
+        type: "string",
+        enum: ["warm", "cool", "neutral", "bold"],
+        default: "neutral",
+      },
+      intensity: {
+        type: "number",
+        default: 0.6,
+        description: "Makeup intensity",
+      },
+    },
+    processing_complexity: "medium",
+    quality_modes: ["natural", "enhanced", "professional"],
+  },
+
+  {
+    id: "hair_stylist",
+    name_ar: "مصفف الشعر الذكي",
+    name_en: "AI Hair Stylist",
+    description_ar: "تغيير تسريحات الشعر والألوان بأحدث الصيحا��",
+    description_en: "Change hairstyles and colors with the latest trends",
+    category: "Face",
+    model_info: {
+      name: "HairGAN + StyleNet",
+      backend_identifier: AIModelIdentifier.HAIRSTYLIST,
+      size_gb: 2.3,
+      processing_time_secs: "6-18 ثانية",
+      gpu_required: true,
+      min_vram_gb: 5,
+    },
+    features: [
+      { description_ar: "تسريحات عصرية", description_en: "Modern hairstyles" },
+      { description_ar: "تلوين طبيعي", description_en: "Natural coloring" },
+      { description_ar: "تحكم في الطول", description_en: "Length control" },
+      { description_ar: "نسيج الشعر", description_en: "Hair texture" },
+    ],
+    is_sensitive: false,
+    requires_mask: false,
+    requires_prompt: true,
+    requires_second_image: false,
+    input_schema: {
+      hairstyle: {
+        type: "string",
+        required: true,
+        description: "Desired hairstyle",
+      },
+      hair_color: { type: "string", description: "Hair color preference" },
+      hair_length: {
+        type: "string",
+        enum: ["short", "medium", "long"],
+        default: "medium",
+      },
+    },
+    processing_complexity: "high",
+    quality_modes: ["natural", "stylized", "fashion"],
+  },
+
+  {
+    id: "tattoo_artist",
+    name_ar: "فنان الوشم الرقمي",
+    name_en: "Digital Tattoo Artist",
+    description_ar: "إضافة وشوم فنية احترافية في أي مكان بالجسم",
+    description_en: "Add artistic professional tattoos anywhere on the body",
+    category: "Body",
+    model_info: {
+      name: "TattooNet + StyleGAN",
+      backend_identifier: AIModelIdentifier.TATTOONET,
+      size_gb: 1.5,
+      processing_time_secs: "5-12 ثانية",
+      gpu_required: true,
+      min_vram_gb: 3,
+    },
+    features: [
+      { description_ar: "تصاميم مخصصة", description_en: "Custom designs" },
+      { description_ar: "أنماط متنوعة", description_en: "Diverse styles" },
+      { description_ar: "تكيف مع الجسم", description_en: "Body adaptation" },
+      { description_ar: "واقعية عالية", description_en: "High realism" },
+    ],
+    is_sensitive: true,
+    requires_mask: true,
+    requires_prompt: true,
+    requires_second_image: false,
+    input_schema: {
+      tattoo_style: {
+        type: "string",
+        enum: ["traditional", "realistic", "tribal", "geometric", "watercolor"],
+        default: "realistic",
+      },
+      size: {
+        type: "string",
+        enum: ["small", "medium", "large"],
+        default: "medium",
+      },
+      color_type: {
+        type: "string",
+        enum: ["black", "colored"],
+        default: "black",
+      },
+    },
+    processing_complexity: "medium",
+    quality_modes: ["artistic", "realistic", "stylized"],
+  },
+
+  {
+    id: "virtual_jewelry",
+    name_ar: "المجوهرات الافتراضية",
+    name_en: "Virtual Jewelry",
+    description_ar: "إضافة مجوهرات وإكسسوارات فاخرة بواقعية مذهلة",
+    description_en: "Add luxury jewelry and accessories with stunning realism",
+    category: "Body",
+    model_info: {
+      name: "JewelryNet + 3D Renderer",
+      backend_identifier: AIModelIdentifier.JEWELRYNET,
+      size_gb: 1.2,
+      processing_time_secs: "4-10 ثواني",
+      gpu_required: true,
+      min_vram_gb: 2,
+    },
+    features: [
+      { description_ar: "مجوهرات فاخرة", description_en: "Luxury jewelry" },
+      {
+        description_ar: "إكسسوارات متنوعة",
+        description_en: "Diverse accessories",
+      },
+      { description_ar: "إضاءة واقعية", description_en: "Realistic lighting" },
+      { description_ar: "تكيف تلقائي", description_en: "Auto adaptation" },
+    ],
+    is_sensitive: false,
+    requires_mask: false,
+    requires_prompt: true,
+    requires_second_image: false,
+    input_schema: {
+      jewelry_type: {
+        type: "string",
+        enum: ["necklace", "earrings", "bracelet", "ring", "watch"],
+        required: true,
+      },
+      material: {
+        type: "string",
+        enum: ["gold", "silver", "diamond", "pearl"],
+        default: "gold",
+      },
+      style: {
+        type: "string",
+        enum: ["classic", "modern", "vintage"],
+        default: "modern",
+      },
+    },
+    processing_complexity: "medium",
+    quality_modes: ["elegant", "luxury", "statement"],
+  },
+
+  {
+    id: "muscle_enhancer",
+    name_ar: "محسن العضلات",
+    name_en: "Muscle Enhancer",
+    description_ar: "تحسين وتعزيز العضلات للحصول على جسم رياضي مثالي",
+    description_en: "Enhance and boost muscles for the perfect athletic body",
+    category: "Body",
+    model_info: {
+      name: "MuscleNet + BodyGAN",
+      backend_identifier: AIModelIdentifier.MUSCLEENHANCER,
+      size_gb: 2.0,
+      processing_time_secs: "8-20 ثانية",
+      gpu_required: true,
+      min_vram_gb: 4,
+    },
+    features: [
+      { description_ar: "تعزيز طبيعي", description_en: "Natural enhancement" },
+      { description_ar: "تحكم دقيق", description_en: "Precise control" },
+      { description_ar: "نسب متوازنة", description_en: "Balanced proportions" },
+      { description_ar: "واقعية عالية", description_en: "High realism" },
+    ],
+    is_sensitive: true,
+    requires_mask: true,
+    requires_prompt: false,
+    requires_second_image: false,
+    input_schema: {
+      enhancement_level: {
+        type: "number",
+        default: 0.5,
+        description: "Enhancement intensity (0.1-1.0)",
+      },
+      muscle_groups: {
+        type: "string",
+        enum: ["arms", "chest", "abs", "legs", "full_body"],
+        default: "full_body",
+      },
+      definition: {
+        type: "number",
+        default: 0.7,
+        description: "Muscle definition level",
+      },
+    },
+    processing_complexity: "high",
+    quality_modes: ["natural", "athletic", "bodybuilder"],
+  },
+
+  {
+    id: "colorizer",
+    name_ar: "ملون الصور القديمة",
+    name_en: "Photo Colorizer",
+    description_ar: "تلوين الصور القديمة بالأبيض والأسود بألوان طبيعية",
+    description_en: "Colorize old black and white photos with natural colors",
+    category: "Technical Enhancement",
+    model_info: {
+      name: "DeOldify + ColorNet",
+      backend_identifier: AIModelIdentifier.REAL_ESRGAN,
+      size_gb: 0.8,
+      processing_time_secs: "4-12 ثانية",
+      gpu_required: true,
+      min_vram_gb: 2,
+    },
+    features: [
+      { description_ar: "ألوان طبيعية", description_en: "Natural colors" },
+      { description_ar: "تحليل تاريخي", description_en: "Historical analysis" },
+      { description_ar: "حفظ التفاصيل", description_en: "Detail preservation" },
+      { description_ar: "تلوين ذكي", description_en: "Smart coloring" },
+    ],
+    is_sensitive: false,
+    requires_mask: false,
+    requires_prompt: false,
+    requires_second_image: false,
+    input_schema: {
+      color_intensity: {
+        type: "number",
+        default: 0.8,
+        description: "Color intensity",
+      },
+      historical_period: {
+        type: "string",
+        enum: ["auto", "1920s", "1940s", "1960s", "1980s"],
+        default: "auto",
+      },
+    },
+    processing_complexity: "medium",
+    quality_modes: ["conservative", "balanced", "vibrant"],
+  },
+
+  {
+    id: "sharpener",
+    name_ar: "محسن الوضوح الذكي",
+    name_en: "Smart Sharpener",
+    description_ar: "تحسين وضوح الصور الضبابية وزيادة حدة التفاصيل",
+    description_en:
+      "Enhance clarity of blurry images and increase detail sharpness",
+    category: "Technical Enhancement",
+    model_info: {
+      name: "Unsharp Mask + AI Filter",
+      backend_identifier: AIModelIdentifier.REAL_ESRGAN,
+      size_gb: 0.3,
+      processing_time_secs: "2-6 ثواني",
+      gpu_required: false,
+      min_vram_gb: 1,
+    },
+    features: [
+      { description_ar: "وضوح متقدم", description_en: "Advanced clarity" },
+      { description_ar: "حفظ الألوان", description_en: "Color preservation" },
+      { description_ar: "تقليل الضوضاء", description_en: "Noise reduction" },
+      { description_ar: "تحكم دقيق", description_en: "Precise control" },
+    ],
+    is_sensitive: false,
+    requires_mask: false,
+    requires_prompt: false,
+    requires_second_image: false,
+    input_schema: {
+      sharpness_level: {
+        type: "number",
+        default: 0.6,
+        description: "Sharpening intensity",
+      },
+      edge_enhancement: {
+        type: "boolean",
+        default: true,
+        description: "Enhance edges",
+      },
+      noise_reduction: {
+        type: "boolean",
+        default: true,
+        description: "Reduce noise",
+      },
+    },
+    processing_complexity: "low",
+    quality_modes: ["gentle", "moderate", "strong"],
+  },
+
+  {
+    id: "object_replacer",
+    name_ar: "مبدل الكائنات الذكي",
+    name_en: "Smart Object Replacer",
+    description_ar: "استبدال أي كائن في الصورة بكائن آخر بواقعية تامة",
+    description_en:
+      "Replace any object in the image with another object with complete realism",
+    category: "Advanced Tools",
+    model_info: {
+      name: "CLIP + SAM + SDXL Inpainting",
+      backend_identifier: AIModelIdentifier.CLIP_SAM,
+      size_gb: 4.2,
+      processing_time_secs: "12-30 ثانية",
+      gpu_required: true,
+      min_vram_gb: 8,
+    },
+    features: [
+      { description_ar: "استبدال ذكي", description_en: "Smart replacement" },
+      {
+        description_ar: "تناسق الإضاءة",
+        description_en: "Lighting consistency",
+      },
+      { description_ar: "تكامل طبيعي", description_en: "Natural integration" },
+      { description_ar: "دقة عالية", description_en: "High precision" },
+    ],
+    is_sensitive: false,
+    requires_mask: true,
+    requires_prompt: true,
+    requires_second_image: false,
+    input_schema: {
+      original_object: {
+        type: "string",
+        required: true,
+        description: "Object to replace",
+      },
+      replacement_object: {
+        type: "string",
+        required: true,
+        description: "New object description",
+      },
+      match_style: {
+        type: "boolean",
+        default: true,
+        description: "Match original style",
+      },
+      preserve_lighting: {
+        type: "boolean",
+        default: true,
+        description: "Preserve lighting",
+      },
+    },
+    processing_complexity: "extreme",
+    quality_modes: ["quick", "balanced", "perfect"],
+  },
+
+  {
+    id: "smart_crop",
+    name_ar: "القص الذكي المتقدم",
+    name_en: "Advanced Smart Crop",
+    description_ar: "قص ذكي للصور مع التركيز على العناصر المهمة تلقائياً",
+    description_en:
+      "Smart image cropping with automatic focus on important elements",
+    category: "Technical Enhancement",
+    model_info: {
+      name: "AttentionNet + Saliency",
+      backend_identifier: AIModelIdentifier.SEGMENT_ANYTHING,
+      size_gb: 0.5,
+      processing_time_secs: "3-8 ثواني",
+      gpu_required: true,
+      min_vram_gb: 2,
+    },
+    features: [
+      { description_ar: "تحليل ذكي", description_en: "Smart analysis" },
+      { description_ar: "نسب مثالية", description_en: "Perfect ratios" },
+      {
+        description_ar: "حفظ العناصر المهمة",
+        description_en: "Preserve important elements",
+      },
+      { description_ar: "قوالب متعددة", description_en: "Multiple templates" },
+    ],
+    is_sensitive: false,
+    requires_mask: false,
+    requires_prompt: false,
+    requires_second_image: false,
+    input_schema: {
+      aspect_ratio: {
+        type: "string",
+        enum: ["1:1", "4:3", "16:9", "9:16", "auto"],
+        default: "auto",
+      },
+      focus_priority: {
+        type: "string",
+        enum: ["faces", "objects", "center", "rule_of_thirds"],
+        default: "faces",
+      },
+      preserve_quality: {
+        type: "boolean",
+        default: true,
+        description: "Maintain image quality",
+      },
+    },
+    processing_complexity: "low",
+    quality_modes: ["quick", "balanced", "precise"],
+  },
+
+  {
+    id: "image_merger",
+    name_ar: "دامج الصور الإبداعي",
+    name_en: "Creative Image Merger",
+    description_ar: "دمج عدة صور في تركيبة فنية واحدة بطريقة إبداعية",
+    description_en:
+      "Merge multiple images into one creative artistic composition",
+    category: "Artistic & Creative",
+    model_info: {
+      name: "BlendNet + CompositeAI",
+      backend_identifier: AIModelIdentifier.STABLE_DIFFUSION_XL,
+      size_gb: 3.1,
+      processing_time_secs: "10-25 ثانية",
+      gpu_required: true,
+      min_vram_gb: 6,
+    },
+    features: [
+      { description_ar: "دمج إبداعي", description_en: "Creative blending" },
+      { description_ar: "تناسق الألوان", description_en: "Color harmony" },
+      {
+        description_ar: "انتقالات ناعمة",
+        description_en: "Smooth transitions",
+      },
+      { description_ar: "تحكم في الشفافية", description_en: "Opacity control" },
+    ],
+    is_sensitive: false,
+    requires_mask: false,
+    requires_prompt: true,
+    requires_second_image: true,
+    input_schema: {
+      blend_mode: {
+        type: "string",
+        enum: ["seamless", "overlay", "multiply", "screen", "artistic"],
+        default: "seamless",
+      },
+      composition_style: {
+        type: "string",
+        enum: ["collage", "panorama", "artistic", "realistic"],
+        default: "artistic",
+      },
+      transition_smoothness: {
+        type: "number",
+        default: 0.8,
+        description: "Transition smoothness",
+      },
+    },
+    processing_complexity: "high",
+    quality_modes: ["artistic", "realistic", "creative"],
+  },
+
+  {
+    id: "eye_color_changer",
+    name_ar: "مغير لون العيون",
+    name_en: "Eye Color Changer",
+    description_ar: "تغيير لون العيون بدقة عالية مع الحفاظ على ��لطبيعية",
+    description_en:
+      "Change eye color with high precision while maintaining naturalness",
+    category: "Face",
+    model_info: {
+      name: "EyeNet + ColorTransfer",
+      backend_identifier: AIModelIdentifier.PHI3_VISION,
+      size_gb: 0.8,
+      processing_time_secs: "3-8 ثواني",
+      gpu_required: true,
+      min_vram_gb: 2,
+    },
+    features: [
+      { description_ar: "ألوان طبيعية", description_en: "Natural colors" },
+      { description_ar: "حفظ التفاصيل", description_en: "Detail preservation" },
+      { description_ar: "تدرج لوني", description_en: "Color gradients" },
+      { description_ar: "واقعية عالية", description_en: "High realism" },
+    ],
+    is_sensitive: false,
+    requires_mask: false,
+    requires_prompt: false,
+    requires_second_image: false,
+    input_schema: {
+      eye_color: {
+        type: "string",
+        enum: ["blue", "green", "brown", "hazel", "gray", "violet"],
+        required: true,
+      },
+      intensity: {
+        type: "number",
+        default: 0.8,
+        description: "Color intensity",
+      },
+      preserve_natural_pattern: {
+        type: "boolean",
+        default: true,
+        description: "Keep natural iris patterns",
+      },
+    },
+    processing_complexity: "medium",
+    quality_modes: ["natural", "enhanced", "dramatic"],
+  },
+
+  {
+    id: "teeth_whitener",
+    name_ar: "مبيض الأسنان المتقدم",
+    name_en: "Advanced Teeth Whitener",
+    description_ar: "تبييض الأسنان وتحسين الابتسامة بشكل طبيعي ومثالي",
+    description_en: "Whiten teeth and enhance smile naturally and perfectly",
+    category: "Face",
+    model_info: {
+      name: "TeethNet + SmileGAN",
+      backend_identifier: AIModelIdentifier.GFPGAN,
+      size_gb: 0.6,
+      processing_time_secs: "2-6 ثواني",
+      gpu_required: true,
+      min_vram_gb: 1,
+    },
+    features: [
+      { description_ar: "تبييض طبيعي", description_en: "Natural whitening" },
+      {
+        description_ar: "تحسين الابتسامة",
+        description_en: "Smile enhancement",
+      },
+      { description_ar: "حفظ الشكل", description_en: "Shape preservation" },
+      { description_ar: "نتائج فورية", description_en: "Instant results" },
+    ],
+    is_sensitive: false,
+    requires_mask: false,
+    requires_prompt: false,
+    requires_second_image: false,
+    input_schema: {
+      whitening_level: {
+        type: "number",
+        default: 0.7,
+        description: "Whitening intensity",
+      },
+      enhance_smile: {
+        type: "boolean",
+        default: true,
+        description: "Enhance overall smile",
+      },
+      preserve_natural_texture: {
+        type: "boolean",
+        default: true,
+        description: "Keep natural tooth texture",
+      },
+    },
+    processing_complexity: "low",
+    quality_modes: ["subtle", "moderate", "bright"],
+  },
+
+  {
+    id: "scar_remover",
+    name_ar: "مزيل الندوب والعيوب",
+    name_en: "Scar & Blemish Remover",
+    description_ar: "إزالة الندوب والعيوب والبقع بدقة عالية وطبيعية",
+    description_en:
+      "Remove scars, blemishes and spots with high precision and naturalness",
+    category: "Face",
+    model_info: {
+      name: "ScarNet + InpaintGAN",
+      backend_identifier: AIModelIdentifier.GFPGAN,
+      size_gb: 1.1,
+      processing_time_secs: "4-10 ثواني",
+      gpu_required: true,
+      min_vram_gb: 2,
+    },
+    features: [
+      { description_ar: "إزالة دقيقة", description_en: "Precise removal" },
+      { description_ar: "نسيج طبيعي", description_en: "Natural texture" },
+      { description_ar: "تلقائي وذكي", description_en: "Auto and smart" },
+      { description_ar: "مطابقة البشرة", description_en: "Skin matching" },
+    ],
+    is_sensitive: false,
+    requires_mask: true,
+    requires_prompt: false,
+    requires_second_image: false,
+    input_schema: {
+      removal_strength: {
+        type: "number",
+        default: 0.8,
+        description: "Removal intensity",
+      },
+      skin_matching: {
+        type: "boolean",
+        default: true,
+        description: "Match surrounding skin",
+      },
+      preserve_texture: {
+        type: "boolean",
+        default: true,
+        description: "Preserve skin texture",
+      },
+    },
+    processing_complexity: "medium",
+    quality_modes: ["gentle", "standard", "complete"],
+  },
+
+  {
+    id: "vintage_filter",
+    name_ar: "فلاتر الطراز القديم",
+    name_en: "Vintage Style Filters",
+    description_ar:
+      "تطبيق فلاتر عتيقة وطراز قديم لإعطاء الصور طابعاً كلاسيكياً",
+    description_en:
+      "Apply vintage and retro filters to give images a classic character",
+    category: "Artistic & Creative",
+    model_info: {
+      name: "VintageNet + StyleGAN",
+      backend_identifier: AIModelIdentifier.VINTAGEFILTER,
+      size_gb: 0.9,
+      processing_time_secs: "3-8 ثواني",
+      gpu_required: true,
+      min_vram_gb: 2,
+    },
+    features: [
+      { description_ar: "أساليب عتيقة", description_en: "Vintage styles" },
+      { description_ar: "تأثيرات كلاسيكية", description_en: "Classic effects" },
+      { description_ar: "ألوان دافئة", description_en: "Warm tones" },
+      { description_ar: "نسيج فيلم", description_en: "Film texture" },
+    ],
+    is_sensitive: false,
+    requires_mask: false,
+    requires_prompt: false,
+    requires_second_image: false,
+    input_schema: {
+      vintage_era: {
+        type: "string",
+        enum: ["1920s", "1950s", "1970s", "1980s", "film"],
+        default: "1970s",
+      },
+      intensity: {
+        type: "number",
+        default: 0.7,
+        description: "Filter intensity",
+      },
+      color_tone: {
+        type: "string",
+        enum: ["sepia", "warm", "cool", "original"],
+        default: "warm",
+      },
+      add_grain: {
+        type: "boolean",
+        default: true,
+        description: "Add film grain",
+      },
+    },
+    processing_complexity: "low",
+    quality_modes: ["subtle", "authentic", "dramatic"],
+  },
 ];
 
 // Helper functions for working with the tools database

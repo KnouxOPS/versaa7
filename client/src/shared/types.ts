@@ -18,6 +18,21 @@ export enum AIModelIdentifier {
   CODEFORMER = "codeformer",
   REMBG = "rembg",
   DEPTH_ESTIMATION = "depth_estimation",
+  STYLEGAN3 = "stylegan3",
+  CARTOONGAN = "cartoongan",
+  ANIMEGAN = "animegan",
+  BODYNET = "bodynet",
+  LIGHTINGNET = "lightingnet",
+  CLOTHINGNET = "clothingnet",
+  AGENET = "agenet",
+  GENDERNET = "gendernet",
+  POSEMASTER = "posemaster",
+  HAIRSTYLIST = "hairstylist",
+  MAKEUPGAN = "makeupgan",
+  TATTOONET = "tattoonet",
+  JEWELRYNET = "jewelrynet",
+  MUSCLEENHANCER = "muscleenhancer",
+  VINTAGEFILTER = "vintagefilter",
 }
 
 // Needs to match ModelInfo Pydantic model structure
@@ -53,11 +68,41 @@ export interface AiTool {
   input_types?: string[]; // e.g., ['image', 'image2']
   input_schema?: { [key: string]: any };
   output_schema?: { [key: string]: any };
+  processing_complexity?: "low" | "medium" | "high" | "extreme";
+  quality_modes?: string[];
 
   // Helper methods mirrored (or logic in component/hook)
   getName(lang: "ar" | "en"): string;
   getDescription(lang: "ar" | "en"): string;
   getFeatures(lang: "ar" | "en"): string[];
+}
+
+// Interface for mask data handling
+export interface MaskData {
+  imageData: ImageData;
+  canvas: HTMLCanvasElement;
+  base64: string;
+}
+
+// Interface for brush state
+export interface BrushState {
+  isDrawing: boolean;
+  brushSize: number;
+  brushOpacity: number;
+  brushHardness: number;
+  lastPoint: { x: number; y: number } | null;
+}
+
+// Interface for image editing state
+export interface ImageEditingState {
+  originalImage: string | null;
+  editedImage: string | null;
+  currentMask: MaskData | null;
+  brushState: BrushState;
+  selectedTool: AiTool | null;
+  isProcessing: boolean;
+  progress: number;
+  statusMessage: string;
 }
 
 // Define the structure for the request payload sent from frontend to backend /process_tool
